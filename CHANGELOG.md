@@ -16,4 +16,4 @@
 
 ## 0.9.9
 
-Initial public release. Read docs here https://github.com/zapier/zapier-platform-cli.
+Initial public release. Read docs: https://github.com/zapier/zapier-platform-cli.

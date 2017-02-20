@@ -211,8 +211,8 @@
               "key": "tag_id",
               "label": "Tag",
               "type": "integer",
-              "dynamic": "tag",
-              "search": "tag"
+              "dynamic": "tag.id.name",
+              "search": "tag.id"
             }
           ]
         }
