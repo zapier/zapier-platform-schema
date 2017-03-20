@@ -81,7 +81,7 @@ Key | Required | Type | Description
 `beforeRequest` | no | [/MiddlewaresSchema](#middlewaresschema) | Before an HTTP request is sent via our `z.request()` client, you can modify it.
 `afterResponse` | no | [/MiddlewaresSchema](#middlewaresschema) | After an HTTP response is recieved via our `z.request()` client, you can modify it.
 `hydrators` | no | [/HydratorsSchema](#hydratorsschema) | An optional bank of named functions that you can use in `z.hydrate('someName')` to lazily load data.
-`resources` | no | [/ResourcesSchema](#resourcesschema) | All the resources for your app. Zapier will take these and create the relevent triggers/searches/creates automatically.
+`resources` | no | [/ResourcesSchema](#resourcesschema) | All the resources for your app. Zapier will take these and generate the relevent triggers/searches/creates automatically.
 `triggers` | no | [/TriggersSchema](#triggersschema) | All the triggers for your app. You can add your own here, or Zapier will automatically register any from the list/hook methods on your resources.
 `searches` | no | [/SearchesSchema](#searchesschema) | All the searches for your app. You can add your own here, or Zapier will automatically register any from the search method on your resources.
 `creates` | no | [/CreatesSchema](#createsschema) | All the creates for your app. You can add your own here, or Zapier will automatically register any from the create method on your resources.
@@ -91,7 +91,7 @@ Key | Required | Type | Description
 
 ## /AuthenticationBasicConfigSchema
 
-Config for basic authentication schema.
+Config for Basic Authentication. Leave empty if your app uses Basic Auth.
 
 #### Details
 
@@ -103,7 +103,7 @@ Config for basic authentication schema.
 
 ## /AuthenticationCustomConfigSchema
 
-Config for custom authentication schema.
+Config for custom authentication (like API keys). Leave empty if your app uses a custom auth method.
 
 #### Details
 
@@ -115,7 +115,7 @@ Config for custom authentication schema.
 
 ## /AuthenticationDigestConfigSchema
 
-Config for digest authentication schema.
+Config for Digest Authentication. Leave empty if your app uses Digets Auth.
 
 #### Details
 
@@ -127,7 +127,7 @@ Config for digest authentication schema.
 
 ## /AuthenticationOAuth2ConfigSchema
 
-Config for OAuth2 authentication schema.
+Config for OAuth2 authentication.
 
 #### Details
 
@@ -141,11 +141,11 @@ Config for OAuth2 authentication schema.
 
 Key | Required | Type | Description
 --- | -------- | ---- | -----------
-`authorizeUrl` | **yes** | oneOf([/RedirectRequestSchema](#redirectrequestschema), [/FunctionSchema](#functionschema)) | Where will we redirect the user to authorize our app? Note: we append the redirect URL and state parameters to return value of this function.
-`getAccessToken` | **yes** | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will we get the access token?
-`refreshAccessToken` | no | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will we refresh the access token?
-`scope` | no | `string` | What scope should we request?
-`autoRefresh` | no | `boolean` | Should we refresh the access token?
+`authorizeUrl` | **yes** | oneOf([/RedirectRequestSchema](#redirectrequestschema), [/FunctionSchema](#functionschema)) | Define where Zapier will redirect the user to authorize our app. Note: we append the redirect URL and state parameters to return value of this function.
+`getAccessToken` | **yes** | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | Define how Zapier fetches an access token from the API
+`refreshAccessToken` | no | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | Define how Zapier will we refresh the access token from the API
+`scope` | no | `string` | What scope should Zapier request?
+`autoRefresh` | no | `boolean` | Should Zapier include a pre-built afterResponse middleware that invokes `refreshAccessToken` when we receive a 401 response?
 
 -----
 
@@ -167,7 +167,7 @@ Key | Required | Type | Description
 --- | -------- | ---- | -----------
 `type` | **yes** | `string` in (`'basic'`, `'custom'`, `'digest'`, `'oauth2'`, `'session'`) | Choose which scheme you want to use.
 `test` | **yes** | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | A function or request that confirms the authentication is working.
-`fields` | no | [/FieldsSchema](#fieldsschema) | Fields you can request of the user before they connect your app to Zapier.
+`fields` | no | [/FieldsSchema](#fieldsschema) | Fields you can request from the user before they connect your app to Zapier.
 `basicConfig` | no | [/AuthenticationBasicConfigSchema](#authenticationbasicconfigschema) | _No description given._
 `customConfig` | no | [/AuthenticationCustomConfigSchema](#authenticationcustomconfigschema) | _No description given._
 `digestConfig` | no | [/AuthenticationDigestConfigSchema](#authenticationdigestconfigschema) | _No description given._
@@ -178,7 +178,7 @@ Key | Required | Type | Description
 
 ## /AuthenticationSessionConfigSchema
 
-Config for session authentication schema.
+Config for session authentication.
 
 #### Details
 
@@ -192,13 +192,13 @@ Config for session authentication schema.
 
 Key | Required | Type | Description
 --- | -------- | ---- | -----------
-`perform` | **yes** | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will we get additional authData?
+`perform` | **yes** | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | Define how Zapier fetches the additional authData needed to make API calls.
 
 -----
 
 ## /BasicActionOperationSchema
 
-Represents the fundamental mechanics of triggers, searches, or creates.
+Represents the fundamental mechanics of a search/create.
 
 #### Details
 
@@ -213,8 +213,8 @@ Represents the fundamental mechanics of triggers, searches, or creates.
 Key | Required | Type | Description
 --- | -------- | ---- | -----------
 `resource` | no | [/RefResourceSchema](#refresourceschema) | Optionally reference and extends a resource. Allows us to automatically tie together samples, lists and hooks greatly improving the UX. EG: if you had another trigger reusing a resource but filtering the results.
-`perform` | **yes** | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will we get the data? This can be a function like `(z) => [{id: 123}]` or a request like `{url: 'http...'}`.
-`performGet` | no | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will we get a single bit of rich data? If you find yourself reaching for this - consider resources and their built-in get methods.
+`perform` | **yes** | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will Zapier get the data? This can be a function like `(z) => [{id: 123}]` or a request like `{url: 'http...'}`.
+`performGet` | no | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will Zapier get a single record? If you find yourself reaching for this - consider resources and their built-in get methods.
 `inputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What should the form a user sees and configures look like?
 `outputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What fields of data will this return? Will use resource outputFields if missing, will also use sample if available.
 `sample` | no | `object` | What does a sample of data look like? Will use resource sample if missing.
@@ -306,7 +306,7 @@ Represents the fundamental mechanics of triggers, searches, or creates.
 Key | Required | Type | Description
 --- | -------- | ---- | -----------
 `resource` | no | [/RefResourceSchema](#refresourceschema) | Optionally reference and extends a resource. Allows us to automatically tie together samples, lists and hooks greatly improving the UX. EG: if you had another trigger reusing a resource but filtering the results.
-`perform` | **yes** | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will we get the data? This can be a function like `(z) => [{id: 123}]` or a request like `{url: 'http...'}`.
+`perform` | **yes** | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will Zapier get the data? This can be a function like `(z) => [{id: 123}]` or a request like `{url: 'http...'}`.
 `inputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What should the form a user sees and configures look like?
 `outputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What fields of data will this return? Will use resource outputFields if missing, will also use sample if available.
 `sample` | no | `object` | What does a sample of data look like? Will use resource sample if missing.
@@ -331,7 +331,7 @@ Key | Required | Type | Description
 --- | -------- | ---- | -----------
 `type` | no | `string` in (`'polling'`) | Clarify how this operation works (polling == pull or hook == push).
 `resource` | no | [/RefResourceSchema](#refresourceschema) | Optionally reference and extends a resource. Allows us to automatically tie together samples, lists and hooks greatly improving the UX. EG: if you had another trigger reusing a resource but filtering the results.
-`perform` | **yes** | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will we get the data? This can be a function like `(z) => [{id: 123}]` or a request like `{url: 'http...'}`.
+`perform` | **yes** | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will Zapier get the data? This can be a function like `(z) => [{id: 123}]` or a request like `{url: 'http...'}`.
 `canPaginate` | no | `boolean` | Does this endpoint support a page offset?
 `inputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What should the form a user sees and configures look like?
 `outputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What fields of data will this return? Will use resource outputFields if missing, will also use sample if available.
@@ -556,7 +556,7 @@ A unique identifier for this item.
 
 ## /MiddlewaresSchema
 
-List of HTTP before or after middlewares. Can be array of functions or single function
+List of HTTP before or after middlewares. Can be an array of functions or a single function
 
 #### Details
 
