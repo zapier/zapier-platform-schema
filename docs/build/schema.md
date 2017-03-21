@@ -91,7 +91,7 @@ Key | Required | Type | Description
 
 ## /AuthenticationBasicConfigSchema
 
-Config for Basic Authentication. Leave empty if your app uses Basic Auth.
+Config for Basic Authentication. No extra properties are required to setup Basic Auth, so you can leave this empty if your app uses Basic Auth.
 
 #### Details
 
@@ -103,7 +103,7 @@ Config for Basic Authentication. Leave empty if your app uses Basic Auth.
 
 ## /AuthenticationCustomConfigSchema
 
-Config for custom authentication (like API keys). Leave empty if your app uses a custom auth method.
+Config for custom authentication (like API keys). No extra properties are required to setup this auth type, so you can leave this empty if your app uses a custom auth method.
 
 #### Details
 
@@ -115,7 +115,7 @@ Config for custom authentication (like API keys). Leave empty if your app uses a
 
 ## /AuthenticationDigestConfigSchema
 
-Config for Digest Authentication. Leave empty if your app uses Digets Auth.
+Config for Digest Authentication. No extra properties are required to setup Digest Auth, so you can leave this empty if your app uses Digets Auth.
 
 #### Details
 
@@ -143,7 +143,7 @@ Key | Required | Type | Description
 --- | -------- | ---- | -----------
 `authorizeUrl` | **yes** | oneOf([/RedirectRequestSchema](#redirectrequestschema), [/FunctionSchema](#functionschema)) | Define where Zapier will redirect the user to authorize our app. Note: we append the redirect URL and state parameters to return value of this function.
 `getAccessToken` | **yes** | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | Define how Zapier fetches an access token from the API
-`refreshAccessToken` | no | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | Define how Zapier will we refresh the access token from the API
+`refreshAccessToken` | no | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | Define how Zapier will refresh the access token from the API
 `scope` | no | `string` | What scope should Zapier request?
 `autoRefresh` | no | `boolean` | Should Zapier include a pre-built afterResponse middleware that invokes `refreshAccessToken` when we receive a 401 response?
 
@@ -212,7 +212,7 @@ Represents the fundamental mechanics of a search/create.
 
 Key | Required | Type | Description
 --- | -------- | ---- | -----------
-`resource` | no | [/RefResourceSchema](#refresourceschema) | Optionally reference and extends a resource. Allows us to automatically tie together samples, lists and hooks greatly improving the UX. EG: if you had another trigger reusing a resource but filtering the results.
+`resource` | no | [/RefResourceSchema](#refresourceschema) | Optionally reference and extends a resource. Allows Zapier to automatically tie together samples, lists and hooks, greatly improving the UX. EG: if you had another trigger reusing a resource but filtering the results.
 `perform` | **yes** | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will Zapier get the data? This can be a function like `(z) => [{id: 123}]` or a request like `{url: 'http...'}`.
 `performGet` | no | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will Zapier get a single record? If you find yourself reaching for this - consider resources and their built-in get methods.
 `inputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What should the form a user sees and configures look like?
@@ -253,11 +253,11 @@ Represents user information for a trigger, search, or create.
 Key | Required | Type | Description
 --- | -------- | ---- | -----------
 `label` | **yes** | `string` | A short label like "New Record" or "Create Record in Project".
-`description` | **yes** | `string` | A should description of what this trigger, search, or create does.
+`description` | **yes** | `string` | A description of what this trigger, search, or create does.
 `directions` | no | `string` | A short blurb that can explain how to get this working. EG: how and where to copy-paste a static hook URL into your application.
-`important` | no | `boolean` | Should this operation be visible by default (is it popular)?
+`important` | no | `boolean` | Affects how prominently this operation is displayed in the UI. Only mark a few of the most popular operations important.
 `hidden` | no | `boolean` | Should this operation be unselectable by users?
-`order` | no | `number` | Should this operation precede or follow other operations in the UI?
+`order` | no | `number` | Should this operation precede or follow other operations when displayed in the UI?
 
 -----
 
@@ -278,8 +278,8 @@ Represents the inbound mechanics of hooks with optional subscribe/unsubscribe. D
 Key | Required | Type | Description
 --- | -------- | ---- | -----------
 `type` | no | `string` in (`'hook'`) | Clarify how this operation works (polling == pull or hook == push).
-`resource` | no | [/RefResourceSchema](#refresourceschema) | Optionally reference and extends a resource. Allows us to automatically tie together samples, lists and hooks greatly improving the UX. EG: if you had another trigger reusing a resource but filtering the results.
-`perform` | **yes** | [/FunctionSchema](#functionschema) | A function that processes the inbound webhook request. Generally would not make outbound traffic.
+`resource` | no | [/RefResourceSchema](#refresourceschema) | Optionally reference and extends a resource. Allows Zapier to automatically tie together samples, lists and hooks, greatly improving the UX. EG: if you had another trigger reusing a resource but filtering the results.
+`perform` | **yes** | [/FunctionSchema](#functionschema) | A function that processes the inbound webhook request.
 `performList` | no | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | Can get "live" data on demand instead of waiting for a hook. If you find yourself reaching for this - consider resources and their built-in hook/list methods.
 `performSubscribe` | no | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | Takes a URL and any necessary data from the user and subscribes.
 `performUnsubscribe` | no | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | Takes a URL and data from a previous subscribe call and unsubscribes.
@@ -305,7 +305,7 @@ Represents the fundamental mechanics of triggers, searches, or creates.
 
 Key | Required | Type | Description
 --- | -------- | ---- | -----------
-`resource` | no | [/RefResourceSchema](#refresourceschema) | Optionally reference and extends a resource. Allows us to automatically tie together samples, lists and hooks greatly improving the UX. EG: if you had another trigger reusing a resource but filtering the results.
+`resource` | no | [/RefResourceSchema](#refresourceschema) | Optionally reference and extends a resource. Allows Zapier to automatically tie together samples, lists and hooks, greatly improving the UX. EG: if you had another trigger reusing a resource but filtering the results.
 `perform` | **yes** | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will Zapier get the data? This can be a function like `(z) => [{id: 123}]` or a request like `{url: 'http...'}`.
 `inputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What should the form a user sees and configures look like?
 `outputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What fields of data will this return? Will use resource outputFields if missing, will also use sample if available.
@@ -315,7 +315,7 @@ Key | Required | Type | Description
 
 ## /BasicPollingOperationSchema
 
-Represents the fundamental mechanics of triggers, searches, or creates.
+Represents the fundamental mechanics of a trigger.
 
 #### Details
 
@@ -330,7 +330,7 @@ Represents the fundamental mechanics of triggers, searches, or creates.
 Key | Required | Type | Description
 --- | -------- | ---- | -----------
 `type` | no | `string` in (`'polling'`) | Clarify how this operation works (polling == pull or hook == push).
-`resource` | no | [/RefResourceSchema](#refresourceschema) | Optionally reference and extends a resource. Allows us to automatically tie together samples, lists and hooks greatly improving the UX. EG: if you had another trigger reusing a resource but filtering the results.
+`resource` | no | [/RefResourceSchema](#refresourceschema) | Optionally reference and extends a resource. Allows Zapier to automatically tie together samples, lists and hooks, greatly improving the UX. EG: if you had another trigger reusing a resource but filtering the results.
 `perform` | **yes** | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will Zapier get the data? This can be a function like `(z) => [{id: 123}]` or a request like `{url: 'http...'}`.
 `canPaginate` | no | `boolean` | Does this endpoint support a page offset?
 `inputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What should the form a user sees and configures look like?
@@ -341,7 +341,7 @@ Key | Required | Type | Description
 
 ## /CreateSchema
 
-How will we get a create new objects?
+How will Zapier create a new object?
 
 #### Details
 
@@ -443,13 +443,13 @@ Key | Required | Type | Description
 `helpText` | no | `string` | A human readable description of this value (IE: "The first part of a full name.").
 `type` | no | `string` in (`'string'`, `'text'`, `'integer'`, `'number'`, `'boolean'`, `'datetime'`, `'file'`, `'password'`) | The type of this value.
 `required` | no | `boolean` | If this value is required or not.
-`placeholder` | no | `string` | An purely example value that is not saved.
-`default` | no | `string` | A default value that is saved the first time.
+`placeholder` | no | `string` | An example value that is not saved.
+`default` | no | `string` | A default value that is saved the first time a Zap is created.
 `dynamic` | no | [/RefResourceSchema](#refresourceschema) | A reference to another resource or trigger that will power a dynamic dropdown.
 `search` | no | [/RefResourceSchema](#refresourceschema) | A reference to another resource or search that will allow adding a search for this field.
-`choices` | no | `object` | A list of machine keys and human values to power a static dropdown.
+`choices` | no | `object` | An object of machine keys and human values to power a static dropdown.
 `list` | no | `boolean` | Can a user provide multiples of this field?
-`children` | no | _n/a_ | Can a user provide multiples of this field? A.K.A. Line Items.
+`children` | no | _n/a_ | An array of child fields that define the structure of a sub-object for this field. Usually used for Line Items.
 `dict` | no | `boolean` | Is this field a key/value input?
 `computed` | no | `boolean` | Is this field automatically populated (and hidden from the user)?
 `altersDynamicFields` | no | `boolean` | Does the value of this field affect the definitions of other fields in the set?
@@ -612,7 +612,7 @@ Reference a resource by key and the data it returns. In the format of: `{resourc
 
 ## /RequestSchema
 
-A representation of a HTTP request - you can use the `{{syntax}}`` to inject authentication, field or global variables.
+A representation of a HTTP request - you can use the `{{syntax}}` to inject authentication, field or global variables.
 
 #### Details
 
@@ -792,7 +792,7 @@ Key | Required | Type | Description
 
 ## /ResourcesSchema
 
-All the resources that underly common CRUD methods powering automatically handled triggers, actions and searches for your app. Zapier will break these apart for you.
+All the resources that underlie common CRUD methods powering automatically handled triggers, creates, and searches for your app. Zapier will break these apart for you.
 
 #### Details
 
@@ -867,7 +867,7 @@ Key | Required | Type | Description
 
 ## /SearchSchema
 
-How will we search for new objects?
+How will Zapier search for existing objects?
 
 #### Details
 
@@ -910,7 +910,7 @@ Key | Required | Type | Description
 
 ## /TriggerSchema
 
-How will we get a notified of new objects?
+How will Zapier get notified of new objects?
 
 #### Details
 
