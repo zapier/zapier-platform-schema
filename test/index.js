@@ -35,7 +35,7 @@ describe('app', () => {
       results.errors.length.should.eql(1);
     });
 
-    it('should run functional constraints', function() {
+    it('should run and pass functional constraints', function() {
       const definition = {
         version: '1.0.0',
         platformVersion: '1.0.0',
@@ -67,7 +67,7 @@ describe('app', () => {
         },
         searchOrCreates: {
           fooSearchOrCreate: {
-            key: 'fooSearchOrCreate',
+            key: 'fooSearch',
             display: {
               label: 'Find or Create a...',
               description: 'Something Something'
@@ -118,14 +118,16 @@ describe('app', () => {
               label: 'Find or Create a...',
               description: 'Something Something'
             },
-            search: 'fooCreate',
-            create: 'fooCreate',
+            search: 'fooBad',
+            create: 'fooBad',
           }
         }
       };
       const results = schema.validateAppDefinition(definition);
-      results.errors.should.have.length(1);
-      results.errors[0].stack.should.eql('instance.searchOrCreates.fooSearchOrCreate.search must match a "key" from a search (options: fooSearch)');
+      results.errors.should.have.length(3);
+      results.errors[0].stack.should.eql('instance.searchOrCreates.fooSearchOrCreate.key must match a "key" from a search (options: fooSearch)');
+      results.errors[1].stack.should.eql('instance.searchOrCreates.fooSearchOrCreate.search must match a "key" from a search (options: fooSearch)');
+      results.errors[2].stack.should.eql('instance.searchOrCreates.fooSearchOrCreate.create must match a "key" from a create (options: fooCreate)');
     });
   });
 
