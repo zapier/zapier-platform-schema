@@ -162,7 +162,9 @@ Represents authentication schemes.
 * `{ type: 'custom',
   test: '$func$2$f$',
   fields: [ { key: 'abc' } ] }`
-* `{ type: 'custom', test: '$func$2$f$', connectionLabel: 'abc' }`
+* `{ type: 'custom',
+  test: '$func$2$f$',
+  connectionLabel: '{{inputData.abc}}' }`
 * `{ type: 'custom',
   test: '$func$2$f$',
   connectionLabel: '$func$2$f$' }`
