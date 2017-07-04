@@ -164,7 +164,7 @@ Represents authentication schemes.
   fields: [ { key: 'abc' } ] }`
 * `{ type: 'custom',
   test: '$func$2$f$',
-  connectionLabel: '{{inputData.abc}}' }`
+  connectionLabel: '{{bundle.inputData.abc}}' }`
 * `{ type: 'custom',
   test: '$func$2$f$',
   connectionLabel: '$func$2$f$' }`
