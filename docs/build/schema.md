@@ -546,6 +546,7 @@ Key | Required | Type | Description
 `dict` | no | `boolean` | Is this field a key/value input?
 `computed` | no | `boolean` | Is this field automatically populated (and hidden from the user)?
 `altersDynamicFields` | no | `boolean` | Does the value of this field affect the definitions of other fields in the set?
+`inputFormat` | no | `string` | Really only useful for subdomain type. This allows the user to specify a comma-separated string like "https://,{{input}},.yourdomain.com/".
 
 -----
 

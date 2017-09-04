@@ -150,6 +150,10 @@
         "altersDynamicFields": {
           "description": "Does the value of this field affect the definitions of other fields in the set?",
           "type": "boolean"
+        },
+        "inputFormat": {
+          "description": "Really only useful for subdomain type. This allows the user to specify a comma-separated string like \"https://,{{input}},.yourdomain.com/\".",
+          "type": "string"
         }
       },
       "additionalProperties": false
