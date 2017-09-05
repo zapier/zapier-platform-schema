@@ -152,8 +152,9 @@
           "type": "boolean"
         },
         "inputFormat": {
-          "description": "Really only useful for subdomain type. This allows the user to specify a comma-separated string like \"https://,{{input}},.yourdomain.com/\".",
-          "type": "string"
+          "description": "Useful when you expect the input to be part of a longer string. Put \"{{input}}\" in place of the user's input (IE: \"https://{{input}}.yourdomain.com\").",
+          "type": "string",
+          "pattern": "^.*{{input}}.*$"
         }
       },
       "additionalProperties": false
