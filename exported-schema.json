@@ -443,10 +443,6 @@
         "hidden": {
           "description": "Should this operation be unselectable by users?",
           "type": "boolean"
-        },
-        "order": {
-          "description": "Should this operation precede or follow other operations when displayed in the UI?",
-          "type": "number"
         }
       },
       "additionalProperties": false

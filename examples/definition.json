@@ -2,9 +2,7 @@
   "version": "1.2.30",
   "platformVersion": "1.2.30",
   "beforeRequest": "$func$2$f$",
-  "afterResponse": [
-    "$func$2$f$"
-  ],
+  "afterResponse": ["$func$2$f$"],
   "requestTemplate": {
     "headers": {
       "X-MyCustomHeader": "my header value"
@@ -29,8 +27,8 @@
     "oauth2Config": {
       "authorizeUrl": "$func$2$f$",
       "getAccessToken": {
-          "url": "http://fake-crm.getsandbox.com/oauth/access_token",
-          "method": "POST"
+        "url": "http://fake-crm.getsandbox.com/oauth/access_token",
+        "method": "POST"
       },
       "scope": "tags,users,contacts",
       "autoRefresh": false
@@ -65,7 +63,6 @@
       "list": {
         "display": {
           "label": "New Tag",
-          "order": 3,
           "description": "Trigger when a new Tag is created in your account."
         },
         "operation": {
@@ -94,7 +91,6 @@
       },
       "get": {
         "display": {
-          "order": 4,
           "label": "Get User by ID",
           "description": "Grab a specific User by ID."
         },
@@ -133,15 +129,10 @@
         "phone": "1-111-555-7000",
         "address": "1234 Test Canyon",
         "owner_id": 1,
-        "tag_ids": [
-          1,
-          2,
-          3
-        ]
+        "tag_ids": [1, 2, 3]
       },
       "get": {
         "display": {
-          "order": 1,
           "label": "Get Contact by ID",
           "description": "Grab a specific Contact by ID."
         },
@@ -160,7 +151,8 @@
       "list": {
         "display": {
           "label": "New Contact",
-          "description": "Trigger when a new Contact is created in your account."
+          "description":
+            "Trigger when a new Contact is created in your account."
         },
         "operation": {
           "perform": {
@@ -225,14 +217,14 @@
       "key": "contact_by_tag",
       "noun": "Contact",
       "display": {
-        "order": 2,
         "label": "New Tagged Contact",
         "description": "Trigger when a new Contact is tagged in your account."
       },
       "operation": {
         "resource": "contact",
         "perform": {
-          "url": "http://fake-crm.getsandbox.com/contacts?tag_id={{inputData.tagId}}"
+          "url":
+            "http://fake-crm.getsandbox.com/contacts?tag_id={{inputData.tagId}}"
         },
         "inputFields": [
           {
@@ -250,18 +242,13 @@
           "phone": "1-111-555-7000",
           "address": "1234 Test Canyon",
           "owner_id": 1,
-          "tag_ids": [
-            1,
-            2,
-            3
-          ]
+          "tag_ids": [1, 2, 3]
         }
       }
     },
     "tag_list": {
       "display": {
         "label": "New Tag",
-        "order": 3,
         "description": "Trigger when a new Tag is created in your account."
       },
       "operation": {
@@ -308,11 +295,7 @@
           "phone": "1-111-555-7000",
           "address": "1234 Test Canyon",
           "owner_id": 1,
-          "tag_ids": [
-            1,
-            2,
-            3
-          ]
+          "tag_ids": [1, 2, 3]
         }
       },
       "key": "contact_list",
@@ -415,11 +398,7 @@
           "phone": "1-111-555-7000",
           "address": "1234 Test Canyon",
           "owner_id": 1,
-          "tag_ids": [
-            1,
-            2,
-            3
-          ]
+          "tag_ids": [1, 2, 3]
         }
       },
       "key": "contact_create",
