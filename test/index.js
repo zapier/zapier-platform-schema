@@ -7,10 +7,11 @@ const testUtils = require('./utils');
 
 const appDefinition = require('../examples/definition.json');
 
-const copy = (o) => JSON.parse(JSON.stringify(o));
+const copy = o => JSON.parse(JSON.stringify(o));
+
+const NUM_SCHEMAS = 44; // changes regularly as we expand
 
 describe('app', () => {
-
   describe('validation', () => {
     it('should be a valid app', () => {
       const results = schema.validateAppDefinition(appDefinition);
@@ -45,10 +46,11 @@ describe('app', () => {
             noun: 'Foo',
             display: {
               label: 'Find Foo',
-              description: 'Find a foo...',
+              description: 'Find a foo...'
             },
             operation: {
-              perform: '$func$2$f$'
+              perform: '$func$2$f$',
+              sample: { id: 1 }
             }
           }
         },
@@ -58,10 +60,11 @@ describe('app', () => {
             noun: 'Foo',
             display: {
               label: 'Create Foo',
-              description: 'Creates a...',
+              description: 'Creates a...'
             },
             operation: {
-              perform: '$func$2$f$'
+              perform: '$func$2$f$',
+              sample: { id: 1 }
             }
           }
         },
@@ -73,7 +76,7 @@ describe('app', () => {
               description: 'Something Something'
             },
             search: 'fooSearch',
-            create: 'fooCreate',
+            create: 'fooCreate'
           }
         }
       };
@@ -91,10 +94,11 @@ describe('app', () => {
             noun: 'Foo',
             display: {
               label: 'Find Foo',
-              description: 'Find a foo...',
+              description: 'Find a foo...'
             },
             operation: {
-              perform: '$func$2$f$'
+              perform: '$func$2$f$',
+              sample: { id: 1 }
             }
           }
         },
@@ -104,10 +108,11 @@ describe('app', () => {
             noun: 'Foo',
             display: {
               label: 'Create Foo',
-              description: 'Creates a...',
+              description: 'Creates a...'
             },
             operation: {
-              perform: '$func$2$f$'
+              perform: '$func$2$f$',
+              sample: { id: 1 }
             }
           }
         },
@@ -119,15 +124,21 @@ describe('app', () => {
               description: 'Something Something'
             },
             search: 'fooBad',
-            create: 'fooBad',
+            create: 'fooBad'
           }
         }
       };
       const results = schema.validateAppDefinition(definition);
       results.errors.should.have.length(3);
-      results.errors[0].stack.should.eql('instance.searchOrCreates.fooSearchOrCreate.key must match a "key" from a search (options: fooSearch)');
-      results.errors[1].stack.should.eql('instance.searchOrCreates.fooSearchOrCreate.search must match a "key" from a search (options: fooSearch)');
-      results.errors[2].stack.should.eql('instance.searchOrCreates.fooSearchOrCreate.create must match a "key" from a create (options: fooCreate)');
+      results.errors[0].stack.should.eql(
+        'instance.searchOrCreates.fooSearchOrCreate.key must match a "key" from a search (options: fooSearch)'
+      );
+      results.errors[1].stack.should.eql(
+        'instance.searchOrCreates.fooSearchOrCreate.search must match a "key" from a search (options: fooSearch)'
+      );
+      results.errors[2].stack.should.eql(
+        'instance.searchOrCreates.fooSearchOrCreate.create must match a "key" from a create (options: fooCreate)'
+      );
     });
 
     it('should validate inputFormat', () => {
@@ -135,16 +146,16 @@ describe('app', () => {
       appCopy.authentication = {
         type: 'custom',
         test: {
-          url: 'https://example.com',
+          url: 'https://example.com'
         },
         fields: [
           {
             key: 'subdomain',
             type: 'string',
             required: true,
-            inputFormat: 'https://{{input}}.example.com',
-          },
-        ],
+            inputFormat: 'https://{{input}}.example.com'
+          }
+        ]
       };
       const results = schema.validateAppDefinition(appCopy);
       results.errors.should.eql([]);
@@ -155,16 +166,16 @@ describe('app', () => {
       appCopy.authentication = {
         type: 'custom',
         test: {
-          url: 'https://example.com',
+          url: 'https://example.com'
         },
         fields: [
           {
             key: 'subdomain',
             type: 'string',
             required: true,
-            inputFormat: 'https://{{input}.example.com',
-          },
-        ],
+            inputFormat: 'https://{{input}.example.com'
+          }
+        ]
       };
       const results = schema.validateAppDefinition(appCopy);
       results.errors.length.should.eql(1);
@@ -178,15 +189,14 @@ describe('app', () => {
   describe('export', () => {
     it('should export the full schema', () => {
       const exportedSchema = schema.exportSchema();
-      Object.keys(exportedSchema.schemas).length.should.eql(42); // changes regularly as we expand
+      Object.keys(exportedSchema.schemas).length.should.eql(NUM_SCHEMAS);
     });
   });
-
 });
 
 describe('auto test', () => {
   const _exportedSchema = schema.exportSchema();
-  Object.keys(_exportedSchema.schemas).map((id) => {
+  Object.keys(_exportedSchema.schemas).map(id => {
     testUtils.testInlineSchemaExamples(id);
   });
 });

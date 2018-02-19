@@ -4,7 +4,6 @@ require('should');
 const schema = require('../../schema');
 
 describe('mutuallyExclusiveFields', () => {
-
   it('should not error on fields not mutually exclusive', () => {
     const definition = {
       version: '1.0.0',
@@ -15,24 +14,26 @@ describe('mutuallyExclusiveFields', () => {
           noun: 'Foo',
           display: {
             label: 'Create Foo',
-            description: 'Creates a...',
+            description: 'Creates a...'
           },
           operation: {
             perform: '$func$2$f$',
+            sample: { id: 1 },
             inputFields: [
-              {key: 'orderId', type: 'number'},
+              { key: 'orderId', type: 'number' },
               {
                 key: 'line_items',
                 children: [
                   {
-                    key: 'product', type: 'string',
-                  },
-                ],
-              },
-            ],
-          },
-        },
-      },
+                    key: 'product',
+                    type: 'string'
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
     };
 
     const results = schema.validateAppDefinition(definition);
@@ -49,30 +50,33 @@ describe('mutuallyExclusiveFields', () => {
           noun: 'Foo',
           display: {
             label: 'Create Foo',
-            description: 'Creates a...',
+            description: 'Creates a...'
           },
           operation: {
             perform: '$func$2$f$',
+            sample: { id: 1 },
             inputFields: [
-              {key: 'orderId', type: 'number'},
+              { key: 'orderId', type: 'number' },
               {
                 key: 'line_items',
                 children: [
                   {
-                    key: 'product',
-                  },
+                    key: 'product'
+                  }
                 ],
-                list: true,
-              },
-            ],
-          },
-        },
-      },
+                list: true
+              }
+            ]
+          }
+        }
+      }
     };
 
     const results = schema.validateAppDefinition(definition);
     results.errors.should.have.length(1);
-    results.errors[0].stack.should.eql('instance.creates.foo.inputFields[1] must not contain children and list, as they\'re mutually exclusive.');
+    results.errors[0].stack.should.eql(
+      "instance.creates.foo.inputFields[1] must not contain children and list, as they're mutually exclusive."
+    );
   });
 
   it('should error on fields that have list and dict', () => {
@@ -85,26 +89,29 @@ describe('mutuallyExclusiveFields', () => {
           noun: 'Foo',
           display: {
             label: 'Create Foo',
-            description: 'Creates a...',
+            description: 'Creates a...'
           },
           operation: {
             perform: '$func$2$f$',
+            sample: { id: 1 },
             inputFields: [
-              {key: 'orderId', type: 'number'},
+              { key: 'orderId', type: 'number' },
               {
                 key: 'line_items',
                 dict: true,
-                list: true,
-              },
-            ],
-          },
-        },
-      },
+                list: true
+              }
+            ]
+          }
+        }
+      }
     };
 
     const results = schema.validateAppDefinition(definition);
     results.errors.should.have.length(1);
-    results.errors[0].stack.should.eql('instance.creates.foo.inputFields[1] must not contain dict and list, as they\'re mutually exclusive.');
+    results.errors[0].stack.should.eql(
+      "instance.creates.foo.inputFields[1] must not contain dict and list, as they're mutually exclusive."
+    );
   });
 
   it('should error on fields that have dynamic and dict', () => {
@@ -117,30 +124,33 @@ describe('mutuallyExclusiveFields', () => {
           noun: 'Foo',
           display: {
             label: 'Create Foo',
-            description: 'Creates a...',
+            description: 'Creates a...'
           },
           operation: {
             perform: '$func$2$f$',
+            sample: { id: 1 },
             inputFields: [
               {
                 key: 'orderId',
                 type: 'number',
                 dynamic: 'foo.id.number',
-                dict: true,
+                dict: true
               },
               {
                 key: 'line_items',
-                list: true,
-              },
-            ],
-          },
-        },
-      },
+                list: true
+              }
+            ]
+          }
+        }
+      }
     };
 
     const results = schema.validateAppDefinition(definition);
     results.errors.should.have.length(1);
-    results.errors[0].stack.should.eql('instance.creates.foo.inputFields[0] must not contain dynamic and dict, as they\'re mutually exclusive.');
+    results.errors[0].stack.should.eql(
+      "instance.creates.foo.inputFields[0] must not contain dynamic and dict, as they're mutually exclusive."
+    );
   });
 
   it('should error on fields that have dynamic and choices', () => {
@@ -153,10 +163,11 @@ describe('mutuallyExclusiveFields', () => {
           noun: 'Foo',
           display: {
             label: 'Create Foo',
-            description: 'Creates a...',
+            description: 'Creates a...'
           },
           operation: {
             perform: '$func$2$f$',
+            sample: { id: 1 },
             inputFields: [
               {
                 key: 'orderId',
@@ -165,20 +176,22 @@ describe('mutuallyExclusiveFields', () => {
                 choices: {
                   uno: 1,
                   dos: 2
-                },
+                }
               },
               {
                 key: 'line_items',
-                list: true,
-              },
-            ],
-          },
-        },
-      },
+                list: true
+              }
+            ]
+          }
+        }
+      }
     };
 
     const results = schema.validateAppDefinition(definition);
     results.errors.should.have.length(1);
-    results.errors[0].stack.should.eql('instance.creates.foo.inputFields[0] must not contain dynamic and choices, as they\'re mutually exclusive.');
+    results.errors[0].stack.should.eql(
+      "instance.creates.foo.inputFields[0] must not contain dynamic and choices, as they're mutually exclusive."
+    );
   });
 });

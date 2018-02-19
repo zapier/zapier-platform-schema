@@ -14,17 +14,19 @@ describe('deepNestedFields', () => {
           noun: 'Foo',
           display: {
             label: 'Create Foo',
-            description: 'Creates a...',
+            description: 'Creates a...'
           },
           operation: {
             perform: '$func$2$f$',
+            sample: { id: 1 },
             inputFields: [
-              {key: 'orderId', type: 'number'},
+              { key: 'orderId', type: 'number' },
               {
                 key: 'line_items',
                 children: [
                   {
-                    key: 'product', type: 'string'
+                    key: 'product',
+                    type: 'string'
                   }
                 ]
               }
@@ -48,20 +50,19 @@ describe('deepNestedFields', () => {
           noun: 'Foo',
           display: {
             label: 'Create Foo',
-            description: 'Creates a...',
+            description: 'Creates a...'
           },
           operation: {
             perform: '$func$2$f$',
+            sample: { id: 1 },
             inputFields: [
-              {key: 'orderId', type: 'number'},
+              { key: 'orderId', type: 'number' },
               {
                 key: 'line_items',
                 children: [
                   {
                     key: 'product',
-                    children: [
-                      {key: 'name', type: 'string'}
-                    ]
+                    children: [{ key: 'name', type: 'string' }]
                   }
                 ]
               }
@@ -73,7 +74,9 @@ describe('deepNestedFields', () => {
 
     const results = schema.validateAppDefinition(definition);
     results.errors.should.have.length(1);
-    results.errors[0].stack.should.eql('instance.creates.foo.inputFields[1] must not contain deeply nested child fields. One level max.');
+    results.errors[0].stack.should.eql(
+      'instance.creates.foo.inputFields[1] must not contain deeply nested child fields. One level max.'
+    );
   });
 
   it('should error on fields with empty children', () => {
@@ -86,12 +89,13 @@ describe('deepNestedFields', () => {
           noun: 'Foo',
           display: {
             label: 'Create Foo',
-            description: 'Creates a...',
+            description: 'Creates a...'
           },
           operation: {
             perform: '$func$2$f$',
+            sample: { id: 1 },
             inputFields: [
-              {key: 'orderId', type: 'number'},
+              { key: 'orderId', type: 'number' },
               {
                 key: 'line_items',
                 children: []
@@ -104,6 +108,8 @@ describe('deepNestedFields', () => {
 
     const results = schema.validateAppDefinition(definition);
     results.errors.should.have.length(1);
-    results.errors[0].stack.should.eql('instance.creates.foo.inputFields[1].children must not be empty.');
+    results.errors[0].stack.should.eql(
+      'instance.creates.foo.inputFields[1].children must not be empty.'
+    );
   });
 });
