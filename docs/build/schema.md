@@ -246,7 +246,7 @@ Key | Required | Type | Description
 `performGet` | no | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will Zapier get a single record? If you find yourself reaching for this - consider resources and their built-in get methods.
 `inputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What should the form a user sees and configures look like?
 `outputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What fields of data will this return? Will use resource outputFields if missing, will also use sample if available.
-`sample` | **yes** | `object` | What does a sample of data look like? Will use resource sample if missing.
+`sample` | no | `object` | What does a sample of data look like? Will use resource sample if missing. Required, if the display is not hidden.
 
 -----
 
@@ -271,7 +271,7 @@ Key | Required | Type | Description
 `performGet` | no | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will Zapier get a single record? If you find yourself reaching for this - consider resources and their built-in get methods.
 `inputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What should the form a user sees and configures look like?
 `outputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What fields of data will this return? Will use resource outputFields if missing, will also use sample if available.
-`sample` | **yes** | `object` | What does a sample of data look like? Will use resource sample if missing.
+`sample` | no | `object` | What does a sample of data look like? Will use resource sample if missing. Required, if the display is not hidden.
 `shouldLock` | no | `boolean` | Should this action be performed one at a time (avoid concurrency)?
 
 -----
@@ -338,7 +338,7 @@ Key | Required | Type | Description
 `performUnsubscribe` | no | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | Takes a URL and data from a previous subscribe call and unsubscribes.
 `inputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What should the form a user sees and configures look like?
 `outputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What fields of data will this return? Will use resource outputFields if missing, will also use sample if available.
-`sample` | **yes** | `object` | What does a sample of data look like? Will use resource sample if missing.
+`sample` | no | `object` | What does a sample of data look like? Will use resource sample if missing. Required, if the display is not hidden.
 
 -----
 
@@ -362,7 +362,7 @@ Key | Required | Type | Description
 `perform` | **yes** | oneOf([/RequestSchema](#requestschema), [/FunctionSchema](#functionschema)) | How will Zapier get the data? This can be a function like `(z) => [{id: 123}]` or a request like `{url: 'http...'}`.
 `inputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What should the form a user sees and configures look like?
 `outputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What fields of data will this return? Will use resource outputFields if missing, will also use sample if available.
-`sample` | **yes** | `object` | What does a sample of data look like? Will use resource sample if missing.
+`sample` | no | `object` | What does a sample of data look like? Will use resource sample if missing. Required, if the display is not hidden.
 
 -----
 
@@ -388,7 +388,7 @@ Key | Required | Type | Description
 `canPaginate` | no | `boolean` | Does this endpoint support a page offset?
 `inputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What should the form a user sees and configures look like?
 `outputFields` | no | [/DynamicFieldsSchema](#dynamicfieldsschema) | What fields of data will this return? Will use resource outputFields if missing, will also use sample if available.
-`sample` | **yes** | `object` | What does a sample of data look like? Will use resource sample if missing.
+`sample` | no | `object` | What does a sample of data look like? Will use resource sample if missing. Required, if the display is not hidden.
 
 -----
 
@@ -412,6 +412,13 @@ How will Zapier create a new object?
   noun: 'Recipe',
   display: { label: 'Create Recipe', description: 'Creates a new recipe.' },
   operation: { perform: '$func$2$f$', sample: { id: 1 }, shouldLock: true } }`
+* `{ key: 'recipe',
+  noun: 'Recipe',
+  display: 
+   { label: 'Create Recipe',
+     description: 'Creates a new recipe.',
+     hidden: true },
+  operation: { perform: '$func$2$f$' } }`
 
 #### Anti-Examples
 
@@ -420,6 +427,10 @@ How will Zapier create a new object?
   noun: 'Recipe',
   display: { label: 'Create Recipe', description: 'Creates a new recipe.' },
   operation: { perform: '$func$2$f$', shouldLock: 'yes' } }`
+* `{ key: 'recipe',
+  noun: 'Recipe',
+  display: { label: 'Create Recipe', description: 'Creates a new recipe.' },
+  operation: { perform: '$func$2$f$' } }`
 
 #### Properties
 
@@ -826,7 +837,24 @@ How will we find create a specific object given inputs? Will be turned into a cr
 * **Pattern** - _n/a_
 * **Source Code** - [lib/schemas/ResourceMethodCreateSchema.js](https://github.com/zapier/zapier-platform-schema/blob/v5.0.0/lib/schemas/ResourceMethodCreateSchema.js)
 
+#### Examples
 
+* `{ display: 
+   { label: 'Create Tag',
+     description: 'Create a new Tag in your account.' },
+  operation: { perform: '$func$2$f$', sample: { id: 1 } } }`
+* `{ display: 
+   { label: 'Create Tag',
+     description: 'Create a new Tag in your account.',
+     hidden: true },
+  operation: { perform: '$func$2$f$' } }`
+
+#### Anti-Examples
+
+* `{ display: 
+   { label: 'Create Tag',
+     description: 'Create a new Tag in your account.' },
+  operation: { perform: '$func$2$f$' } }`
 
 #### Properties
 
@@ -847,7 +875,26 @@ How will we get a single object given a unique identifier/id?
 * **Pattern** - _n/a_
 * **Source Code** - [lib/schemas/ResourceMethodGetSchema.js](https://github.com/zapier/zapier-platform-schema/blob/v5.0.0/lib/schemas/ResourceMethodGetSchema.js)
 
+#### Examples
 
+* `{ display: 
+   { label: 'Get Tag by ID',
+     description: 'Grab a specific Tag by ID.' },
+  operation: 
+   { perform: { url: '$func$0$f$' },
+     sample: { id: 385, name: 'proactive enable ROI' } } }`
+* `{ display: 
+   { label: 'Get Tag by ID',
+     description: 'Grab a specific Tag by ID.',
+     hidden: true },
+  operation: { perform: { url: '$func$0$f$' } } }`
+
+#### Anti-Examples
+
+* `{ display: 
+   { label: 'Get Tag by ID',
+     description: 'Grab a specific Tag by ID.' },
+  operation: { perform: { url: '$func$0$f$' } } }`
 
 #### Properties
 
@@ -868,7 +915,27 @@ How will we get notified of new objects? Will be turned into a trigger automatic
 * **Pattern** - _n/a_
 * **Source Code** - [lib/schemas/ResourceMethodHookSchema.js](https://github.com/zapier/zapier-platform-schema/blob/v5.0.0/lib/schemas/ResourceMethodHookSchema.js)
 
+#### Examples
 
+* `{ display: 
+   { label: 'Get Tag by ID',
+     description: 'Grab a specific Tag by ID.' },
+  operation: 
+   { type: 'hook',
+     perform: '$func$0$f$',
+     sample: { id: 385, name: 'proactive enable ROI' } } }`
+* `{ display: 
+   { label: 'Get Tag by ID',
+     description: 'Grab a specific Tag by ID.',
+     hidden: true },
+  operation: { type: 'hook', perform: '$func$0$f$' } }`
+
+#### Anti-Examples
+
+* `{ display: 
+   { label: 'Get Tag by ID',
+     description: 'Grab a specific Tag by ID.' },
+  operation: { type: 'hook', perform: '$func$0$f$' } }`
 
 #### Properties
 
@@ -889,7 +956,29 @@ How will we get a list of new objects? Will be turned into a trigger automatical
 * **Pattern** - _n/a_
 * **Source Code** - [lib/schemas/ResourceMethodListSchema.js](https://github.com/zapier/zapier-platform-schema/blob/v5.0.0/lib/schemas/ResourceMethodListSchema.js)
 
+#### Examples
 
+* `{ display: 
+   { label: 'New User',
+     description: 'Trigger when a new User is created in your account.' },
+  operation: 
+   { perform: { url: 'http://fake-crm.getsandbox.com/users' },
+     sample: 
+      { id: 49,
+        name: 'Veronica Kuhn',
+        email: 'veronica.kuhn@company.com' } } }`
+* `{ display: 
+   { label: 'New User',
+     description: 'Trigger when a new User is created in your account.',
+     hidden: true },
+  operation: { perform: { url: 'http://fake-crm.getsandbox.com/users' } } }`
+
+#### Anti-Examples
+
+* `{ display: 
+   { label: 'New User',
+     description: 'Trigger when a new User is created in your account.' },
+  operation: { perform: { url: 'http://fake-crm.getsandbox.com/users' } } }`
 
 #### Properties
 
@@ -910,7 +999,26 @@ How will we find a specific object given filters or search terms? Will be turned
 * **Pattern** - _n/a_
 * **Source Code** - [lib/schemas/ResourceMethodSearchSchema.js](https://github.com/zapier/zapier-platform-schema/blob/v5.0.0/lib/schemas/ResourceMethodSearchSchema.js)
 
+#### Examples
 
+* `{ display: 
+   { label: 'Find a Recipe',
+     description: 'Search for recipe by cuisine style.' },
+  operation: { perform: '$func$2$f$', sample: { id: 1 } } }`
+* `{ display: 
+   { label: 'Find a Recipe',
+     description: 'Search for recipe by cuisine style.',
+     hidden: true },
+  operation: { perform: '$func$2$f$' } }`
+
+#### Anti-Examples
+
+* `{ key: 'recipe',
+  noun: 'Recipe',
+  display: 
+   { label: 'Find a Recipe',
+     description: 'Search for recipe by cuisine style.' },
+  operation: { perform: '$func$2$f$' } }`
 
 #### Properties
 
@@ -931,7 +1039,58 @@ Represents a resource, which will in turn power triggers, searches, or creates.
 * **Pattern** - _n/a_
 * **Source Code** - [lib/schemas/ResourceSchema.js](https://github.com/zapier/zapier-platform-schema/blob/v5.0.0/lib/schemas/ResourceSchema.js)
 
+#### Examples
 
+* `{ key: 'tag',
+  noun: 'Tag',
+  get: 
+   { display: 
+      { label: 'Get Tag by ID',
+        description: 'Grab a specific Tag by ID.' },
+     operation: { perform: [Object], sample: [Object] } } }`
+* `{ key: 'tag',
+  noun: 'Tag',
+  sample: { id: 385, name: 'proactive enable ROI' },
+  get: 
+   { display: 
+      { label: 'Get Tag by ID',
+        description: 'Grab a specific Tag by ID.' },
+     operation: { perform: [Object] } } }`
+* `{ key: 'tag',
+  noun: 'Tag',
+  get: 
+   { display: 
+      { label: 'Get Tag by ID',
+        description: 'Grab a specific Tag by ID.',
+        hidden: true },
+     operation: { perform: [Object] } },
+  list: 
+   { display: 
+      { label: 'New Tag',
+        description: 'Trigger when a new Tag is created in your account.' },
+     operation: { perform: [Object], sample: [Object] } } }`
+
+#### Anti-Examples
+
+* `{ key: 'tag',
+  noun: 'Tag',
+  get: 
+   { display: 
+      { label: 'Get Tag by ID',
+        description: 'Grab a specific Tag by ID.' },
+     operation: { perform: [Object] } },
+  list: 
+   { display: 
+      { label: 'New Tag',
+        description: 'Trigger when a new Tag is created in your account.' },
+     operation: { perform: [Object], sample: [Object] } } }`
+* `{ key: 'tag',
+  noun: 'Tag',
+  get: 
+   { display: 
+      { label: 'Get Tag by ID',
+        description: 'Grab a specific Tag by ID.' },
+     operation: { perform: [Object] } } }`
 
 #### Properties
 
@@ -1034,7 +1193,31 @@ How will Zapier search for existing objects?
 * **Pattern** - _n/a_
 * **Source Code** - [lib/schemas/SearchSchema.js](https://github.com/zapier/zapier-platform-schema/blob/v5.0.0/lib/schemas/SearchSchema.js)
 
+#### Examples
 
+* `{ key: 'recipe',
+  noun: 'Recipe',
+  display: 
+   { label: 'Find a Recipe',
+     description: 'Search for recipe by cuisine style.' },
+  operation: { perform: '$func$2$f$', sample: { id: 1 } } }`
+* `{ key: 'recipe',
+  noun: 'Recipe',
+  display: 
+   { label: 'Find a Recipe',
+     description: 'Search for recipe by cuisine style.',
+     hidden: true },
+  operation: { perform: '$func$2$f$' } }`
+
+#### Anti-Examples
+
+* `'abc'`
+* `{ key: 'recipe',
+  noun: 'Recipe',
+  display: 
+   { label: 'Find a Recipe',
+     description: 'Search for recipe by cuisine style.' },
+  operation: { perform: '$func$2$f$' } }`
 
 #### Properties
 
@@ -1077,7 +1260,30 @@ How will Zapier get notified of new objects?
 * **Pattern** - _n/a_
 * **Source Code** - [lib/schemas/TriggerSchema.js](https://github.com/zapier/zapier-platform-schema/blob/v5.0.0/lib/schemas/TriggerSchema.js)
 
+#### Examples
 
+* `{ key: 'new_recipe',
+  noun: 'Recipe',
+  display: 
+   { label: 'New Recipe',
+     description: 'Triggers when a new recipe is added.' },
+  operation: { type: 'polling', perform: '$func$0$f$', sample: { id: 1 } } }`
+* `{ key: 'new_recipe',
+  noun: 'Recipe',
+  display: 
+   { label: 'New Recipe',
+     description: 'Triggers when a new recipe is added.',
+     hidden: true },
+  operation: { type: 'polling', perform: '$func$0$f$' } }`
+
+#### Anti-Examples
+
+* `{ key: 'new_recipe',
+  noun: 'Recipe',
+  display: 
+   { label: 'New Recipe',
+     description: 'Triggers when a new recipe is added.' },
+  operation: { perform: '$func$0$f$' } }`
 
 #### Properties
 
