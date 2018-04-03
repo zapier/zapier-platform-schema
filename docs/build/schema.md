@@ -533,7 +533,17 @@ Represents an array of fields or functions.
 
 ## /FieldSchema
 
-Defines a field an app either needs as input, or gives as output.
+Defines a field an app either needs as input, or gives as output. In addition to the requirements below, the following fields are mutually exclusive:
+
+* children & list
+* children & dict
+* children & type
+* children & placeholder
+* children & helpText
+* children & default
+* dict & list
+* dynamic & dict
+* dynamic & choices
 
 #### Details
 
@@ -991,7 +1001,7 @@ Pair an existing search and a create to enable "Find or Create" functionality in
 
 Key | Required | Type | Description
 --- | -------- | ---- | -----------
-`key` | **yes** | [/KeySchema](#keyschema) | A key to uniquely identify this search-or-create.
+`key` | **yes** | [/KeySchema](#keyschema) | A key to uniquely identify this search-or-create. Must match the search key.
 `display` | **yes** | [/BasicDisplaySchema](#basicdisplayschema) | Configures the UI for this search-or-create.
 `search` | **yes** | [/KeySchema](#keyschema) | The key of the search that powers this search-or-create
 `create` | **yes** | [/KeySchema](#keyschema) | The key of the create that powers this search-or-create
