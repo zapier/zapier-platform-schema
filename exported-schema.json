@@ -206,7 +206,8 @@
             "$ref": "/FieldSchema"
           },
           "description":
-            "An array of child fields that define the structure of a sub-object for this field. Usually used for line items."
+            "An array of child fields that define the structure of a sub-object for this field. Usually used for line items.",
+          "minItems": 1
         },
         "dict": {
           "description": "Is this field a key/value input?",
