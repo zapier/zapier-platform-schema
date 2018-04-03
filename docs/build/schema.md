@@ -533,17 +533,17 @@ Represents an array of fields or functions.
 
 ## /FieldSchema
 
-Defines a field an app either needs as input, or gives as output. In addition to the requirements below, the following fields are mutually exclusive:
+Defines a field an app either needs as input, or gives as output. In addition to the requirements below, the following keys are mutually exclusive:
 
-* children & list
-* children & dict
-* children & type
-* children & placeholder
-* children & helpText
-* children & default
-* dict & list
-* dynamic & dict
-* dynamic & choices
+* `children` & `list`
+* `children` & `dict`
+* `children` & `type`
+* `children` & `placeholder`
+* `children` & `helpText`
+* `children` & `default`
+* `dict` & `list`
+* `dynamic` & `dict`
+* `dynamic` & `choices`
 
 #### Details
 

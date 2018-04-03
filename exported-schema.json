@@ -129,7 +129,7 @@
     "FieldSchema": {
       "id": "/FieldSchema",
       "description":
-        "Defines a field an app either needs as input, or gives as output. In addition to the requirements below, the following fields are mutually exclusive:\n\n* children & list\n* children & dict\n* children & type\n* children & placeholder\n* children & helpText\n* children & default\n* dict & list\n* dynamic & dict\n* dynamic & choices",
+        "Defines a field an app either needs as input, or gives as output. In addition to the requirements below, the following keys are mutually exclusive:\n\n* `children` & `list`\n* `children` & `dict`\n* `children` & `type`\n* `children` & `placeholder`\n* `children` & `helpText`\n* `children` & `default`\n* `dict` & `list`\n* `dynamic` & `dict`\n* `dynamic` & `choices`",
       "type": "object",
       "required": ["key"],
       "properties": {
