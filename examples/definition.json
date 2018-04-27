@@ -124,18 +124,43 @@
         }
       },
       "list": {
-        "display": {
-          "label": "New User",
-          "description": "Trigger when a new User is created in your account."
-        },
-        "operation": {
-          "perform": {
-            "url": "http://fake-crm.getsandbox.com/users"
+        "new_user_in_dept": {
+          "display": {
+            "label": "New User in Dept",
+            "description":
+              "Trigger when a new User is created in your department."
           },
-          "sample": {
-            "id": 49,
-            "name": "Veronica Kuhn",
-            "email": "veronica.kuhn@company.com"
+          "operation": {
+            "perform": {
+              "url": "http://fake-crm.getsandbox.com/users"
+            },
+            "sample": {
+              "id": 49,
+              "name": "Veronica Kuhn",
+              "email": "veronica.kuhn@company.com"
+            },
+            "inputFields": [
+              {
+                "key": "department_id",
+                "required": true
+              }
+            ]
+          }
+        },
+        "new_user": {
+          "display": {
+            "label": "New User",
+            "description": "Trigger when a new User is created in your account."
+          },
+          "operation": {
+            "perform": {
+              "url": "http://fake-crm.getsandbox.com/users"
+            },
+            "sample": {
+              "id": 49,
+              "name": "Veronica Kuhn",
+              "email": "veronica.kuhn@company.com"
+            }
           }
         }
       }
@@ -258,6 +283,43 @@
               "type": "integer",
               "dynamic": "tag.id.name",
               "search": "tag.id"
+            }
+          ]
+        }
+      },
+      "misc": {
+        "display": {
+          "label": "Email Contact",
+          "description": "Email a Contact in your account."
+        },
+        "operation": {
+          "perform": "$func$2$f$",
+          "sample": {
+            "id": 1,
+            "name": "Rosalee Kub",
+            "company": "Schmidt, O'Reilly and Moen",
+            "email": "Rosalee_Kub47@hotmail.com",
+            "phone": "412-916-6798 x3478",
+            "address": "73375 Jacobson Turnpike",
+            "owner_id": 9,
+            "tag_ids": [87]
+          },
+          "inputFields": [
+            {
+              "key": "id",
+              "required": true
+            },
+            {
+              "key": "subject",
+              "label": "Subject",
+              "type": "string",
+              "required": true
+            },
+            {
+              "key": "body",
+              "label": "Body",
+              "type": "string",
+              "required": true
             }
           ]
         }

@@ -876,6 +876,25 @@
       },
       "additionalProperties": false
     },
+    "ResourceMethodMiscSchema": {
+      "id": "/ResourceMethodMiscSchema",
+      "description":
+        "How will we find perform a miscellaneous action for a specific object given inputs? Will be turned into an action automatically.",
+      "type": "object",
+      "required": ["display", "operation"],
+      "properties": {
+        "display": {
+          "description":
+            "Define how this misc method will be exposed in the UI.",
+          "$ref": "/BasicDisplaySchema"
+        },
+        "operation": {
+          "description": "Define how this misc method will work.",
+          "$ref": "/BasicActionOperationSchema"
+        }
+      },
+      "additionalProperties": false
+    },
     "KeySchema": {
       "id": "/KeySchema",
       "description": "A unique identifier for this item.",
@@ -909,22 +928,92 @@
         "hook": {
           "description":
             "How will we get notified of new objects? Will be turned into a trigger automatically.",
-          "$ref": "/ResourceMethodHookSchema"
+          "oneOf": [
+            {
+              "$ref": "/ResourceMethodHookSchema"
+            },
+            {
+              "patternProperties": {
+                "^[a-zA-Z]+[a-zA-Z0-9_]*$": {
+                  "description":
+                    "A wrapper allowing for resources with multiple gets/hooks/lists/search/creates.",
+                  "$ref": "/ResourceMethodHookSchema"
+                }
+              }
+            }
+          ]
         },
         "list": {
           "description":
             "How will we get a list of new objects? Will be turned into a trigger automatically.",
-          "$ref": "/ResourceMethodListSchema"
+          "oneOf": [
+            {
+              "$ref": "/ResourceMethodListSchema"
+            },
+            {
+              "patternProperties": {
+                "^[a-zA-Z]+[a-zA-Z0-9_]*$": {
+                  "description":
+                    "A wrapper allowing for resources with multiple gets/hooks/lists/search/creates.",
+                  "$ref": "/ResourceMethodListSchema"
+                }
+              }
+            }
+          ]
         },
         "search": {
           "description":
             "How will we find a specific object given filters or search terms? Will be turned into a search automatically.",
-          "$ref": "/ResourceMethodSearchSchema"
+          "oneOf": [
+            {
+              "$ref": "/ResourceMethodSearchSchema"
+            },
+            {
+              "patternProperties": {
+                "^[a-zA-Z]+[a-zA-Z0-9_]*$": {
+                  "description":
+                    "A wrapper allowing for resources with multiple gets/hooks/lists/search/creates.",
+                  "$ref": "/ResourceMethodSearchSchema"
+                }
+              }
+            }
+          ]
         },
         "create": {
           "description":
             "How will we find create a specific object given inputs? Will be turned into a create automatically.",
-          "$ref": "/ResourceMethodCreateSchema"
+          "oneOf": [
+            {
+              "$ref": "/ResourceMethodCreateSchema"
+            },
+            {
+              "patternProperties": {
+                "^[a-zA-Z]+[a-zA-Z0-9_]*$": {
+                  "description":
+                    "A wrapper allowing for resources with multiple gets/hooks/lists/search/creates.",
+                  "$ref": "/ResourceMethodCreateSchema"
+                }
+              }
+            }
+          ]
+        },
+        "misc": {
+          "description":
+            "How will we find perform a miscellaneous action for a specific object given inputs? Will be turned into an action automatically.",
+          "oneOf": [
+            {
+              "$ref": "/ResourceMethodMiscSchema"
+            },
+            {
+              "patternProperties": {
+                "^[a-zA-Z]+[a-zA-Z0-9_]*$": {
+                  "description":
+                    "A wrapper allowing for resources with multiple gets/hooks/lists/search/creates.",
+                  "$ref": "/ResourceMethodMiscSchema"
+                }
+              }
+            }
+          ]
         },
         "outputFields": {
           "description": "What fields of data will this return?",
