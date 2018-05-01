@@ -648,18 +648,24 @@ Key | Required | Type | Description
 
 ## /FunctionSchema
 
-Internal pointer to a function from the original source. Encodes arity and if `arguments` is used in the body. Note - just write normal functions and the system will encode the pointers for you.
+Internal pointer to a function from the original source or the source code itself. Encodes arity and if `arguments` is used in the body. Note - just write normal functions and the system will encode the pointers for you. Or, provide {source: "return 1 + 2"} and the system will wrap in a function for you.
 
 #### Details
 
-* **Type** - `string`
-* **Pattern** - `^\$func\$\d+\$[tf]\$$`
+* **Type** - oneOf(`string`, `object`)
+* **Pattern** - _n/a_
 * **Source Code** - [lib/schemas/FunctionSchema.js](https://github.com/zapier/zapier-platform-schema/blob/v5.2.0/lib/schemas/FunctionSchema.js)
 
 #### Examples
 
 * `'$func$0$f$'`
 * `'$func$2$t$'`
+* `{ source: 'return 1 + 2' }`
+
+#### Anti-Examples
+
+* `'funcy'`
+* `{ source: '1 + 2' }`
 
 -----
 
