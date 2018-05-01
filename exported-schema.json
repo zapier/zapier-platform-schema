@@ -232,6 +232,19 @@
       },
       "additionalProperties": false
     },
+    "FunctionSourceSchema": {
+      "id": "/FunctionSourceSchema",
+      "description":
+        "Source code like {source: \"return 1 + 2\"} which the system will wrap in a function for you.",
+      "type": "object",
+      "required": ["source"],
+      "properties": {
+        "source": {
+          "type": "string",
+          "pattern": "return"
+        }
+      }
+    },
     "FlatObjectSchema": {
       "id": "/FlatObjectSchema",
       "description": "An object whose values can only be primitives",
@@ -271,14 +284,7 @@
           "pattern": "^\\$func\\$\\d+\\$[tf]\\$$"
         },
         {
-          "type": "object",
-          "required": ["source"],
-          "properties": {
-            "source": {
-              "type": "string",
-              "pattern": "return"
-            }
-          }
+          "$ref": "/FunctionSourceSchema"
         }
       ]
     },
