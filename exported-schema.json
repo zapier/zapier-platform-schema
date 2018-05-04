@@ -232,11 +232,25 @@
       },
       "additionalProperties": false
     },
+    "FunctionRequireSchema": {
+      "id": "/FunctionRequireSchema",
+      "description":
+        "A path to a file that might have content like `module.exports = (z, bundle) => [{id: 123}];`.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["require"],
+      "properties": {
+        "require": {
+          "type": "string"
+        }
+      }
+    },
     "FunctionSourceSchema": {
       "id": "/FunctionSourceSchema",
       "description":
         "Source code like {source: \"return 1 + 2\"} which the system will wrap in a function for you.",
       "type": "object",
+      "additionalProperties": false,
       "required": ["source"],
       "properties": {
         "source": {
@@ -282,6 +296,9 @@
         {
           "type": "string",
           "pattern": "^\\$func\\$\\d+\\$[tf]\\$$"
+        },
+        {
+          "$ref": "/FunctionRequireSchema"
         },
         {
           "$ref": "/FunctionSourceSchema"
