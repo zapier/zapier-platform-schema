@@ -64,6 +64,11 @@
           "description":
             "All the search-or-create combos for your app. You can create your own here, or Zapier will automatically register any from resources that define a search, a create, and a get (or define a searchOrCreate directly). Register non-resource search-or-creates here as well.",
           "$ref": "/SearchOrCreatesSchema"
+        },
+        "legacyScriptingSource": {
+          "description":
+            "**INTERNAL USE**. Zapier uses this to store the scripting code from a legacy Web Builder app.",
+          "$ref": "/CodeSchema"
         }
       },
       "additionalProperties": false
@@ -565,6 +570,111 @@
       },
       "additionalProperties": false
     },
+    "BasicCreateActionOperationSchema": {
+      "id": "/BasicCreateActionOperationSchema",
+      "description": "Represents the fundamental mechanics of a create.",
+      "type": "object",
+      "required": ["perform"],
+      "properties": {
+        "resource": {
+          "description":
+            "Optionally reference and extends a resource. Allows Zapier to automatically tie together samples, lists and hooks, greatly improving the UX. EG: if you had another trigger reusing a resource but filtering the results.",
+          "$ref": "/RefResourceSchema"
+        },
+        "perform": {
+          "description":
+            "How will Zapier get the data? This can be a function like `(z) => [{id: 123}]` or a request like `{url: 'http...'}`.",
+          "oneOf": [
+            {
+              "$ref": "/RequestSchema"
+            },
+            {
+              "$ref": "/FunctionSchema"
+            }
+          ]
+        },
+        "performGet": {
+          "description":
+            "How will Zapier get a single record? If you find yourself reaching for this - consider resources and their built-in get methods.",
+          "oneOf": [
+            {
+              "$ref": "/RequestSchema"
+            },
+            {
+              "$ref": "/FunctionSchema"
+            }
+          ]
+        },
+        "inputFields": {
+          "description":
+            "What should the form a user sees and configures look like?",
+          "$ref": "/DynamicFieldsSchema"
+        },
+        "outputFields": {
+          "description":
+            "What fields of data will this return? Will use resource outputFields if missing, will also use sample if available.",
+          "$ref": "/DynamicFieldsSchema"
+        },
+        "sample": {
+          "description":
+            "What does a sample of data look like? Will use resource sample if missing. Requirement waived if `display.hidden` is true or if this belongs to a resource that has a top-level sample",
+          "type": "object",
+          "minProperties": 1,
+          "docAnnotation": {
+            "required": {
+              "type": "replace",
+              "value": "**yes** (with exceptions, see description)"
+            }
+          }
+        },
+        "legacyProperties": {
+          "description":
+            "**INTERNAL USE ONLY**. Zapier uses this to store properties from a legacy Web Builder app.",
+          "$ref": "/FlatObjectSchema"
+        },
+        "shouldLock": {
+          "description":
+            "Should this action be performed one at a time (avoid concurrency)?",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KeySchema": {
+      "id": "/KeySchema",
+      "description": "A unique identifier for this item.",
+      "type": "string",
+      "minLength": 2,
+      "pattern": "^[a-zA-Z]+[a-zA-Z0-9_]*$"
+    },
+    "CreateSchema": {
+      "id": "/CreateSchema",
+      "description": "How will Zapier create a new object?",
+      "type": "object",
+      "required": ["key", "noun", "display", "operation"],
+      "properties": {
+        "key": {
+          "description": "A key to uniquely identify this create.",
+          "$ref": "/KeySchema"
+        },
+        "noun": {
+          "description":
+            "A noun for this create that completes the sentence \"creates a new XXX\".",
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 255
+        },
+        "display": {
+          "description": "Configures the UI for this create.",
+          "$ref": "/BasicDisplaySchema"
+        },
+        "operation": {
+          "description": "Powers the functionality for this create.",
+          "$ref": "/BasicCreateActionOperationSchema"
+        }
+      },
+      "additionalProperties": false
+    },
     "BasicOperationSchema": {
       "id": "/BasicOperationSchema",
       "description":
@@ -610,6 +720,11 @@
               "value": "**yes** (with exceptions, see description)"
             }
           }
+        },
+        "legacyProperties": {
+          "description":
+            "**INTERNAL USE ONLY**. Zapier uses this to store properties from a legacy Web Builder app.",
+          "$ref": "/FlatObjectSchema"
         }
       },
       "additionalProperties": false
@@ -700,6 +815,11 @@
               "value": "**yes** (with exceptions, see description)"
             }
           }
+        },
+        "legacyProperties": {
+          "description":
+            "**INTERNAL USE ONLY**. Zapier uses this to store properties from a legacy Web Builder app.",
+          "$ref": "/FlatObjectSchema"
         }
       },
       "additionalProperties": false
@@ -759,6 +879,11 @@
               "value": "**yes** (with exceptions, see description)"
             }
           }
+        },
+        "legacyProperties": {
+          "description":
+            "**INTERNAL USE ONLY**. Zapier uses this to store properties from a legacy Web Builder app.",
+          "$ref": "/FlatObjectSchema"
         }
       },
       "additionalProperties": false
@@ -819,6 +944,11 @@
               "value": "**yes** (with exceptions, see description)"
             }
           }
+        },
+        "legacyProperties": {
+          "description":
+            "**INTERNAL USE ONLY**. Zapier uses this to store properties from a legacy Web Builder app.",
+          "$ref": "/FlatObjectSchema"
         }
       },
       "additionalProperties": false
@@ -918,13 +1048,6 @@
       },
       "additionalProperties": false
     },
-    "KeySchema": {
-      "id": "/KeySchema",
-      "description": "A unique identifier for this item.",
-      "type": "string",
-      "minLength": 2,
-      "pattern": "^[a-zA-Z]+[a-zA-Z0-9_]*$"
-    },
     "ResourceSchema": {
       "id": "/ResourceSchema",
       "description":
@@ -980,37 +1103,31 @@
       },
       "additionalProperties": false
     },
-    "TriggerSchema": {
-      "id": "/TriggerSchema",
-      "description": "How will Zapier get notified of new objects?",
+    "SearchOrCreateSchema": {
+      "id": "/SearchOrCreateSchema",
+      "description":
+        "Pair an existing search and a create to enable \"Find or Create\" functionality in your app",
       "type": "object",
-      "required": ["key", "noun", "display", "operation"],
+      "required": ["key", "display", "search", "create"],
       "properties": {
         "key": {
-          "description": "A key to uniquely identify this trigger.",
+          "description":
+            "A key to uniquely identify this search-or-create. Must match the search key.",
           "$ref": "/KeySchema"
         },
-        "noun": {
-          "description":
-            "A noun for this trigger that completes the sentence \"triggers on a new XXX\".",
-          "type": "string",
-          "minLength": 2,
-          "maxLength": 255
-        },
         "display": {
-          "description": "Configures the UI for this trigger.",
+          "description": "Configures the UI for this search-or-create.",
           "$ref": "/BasicDisplaySchema"
         },
-        "operation": {
-          "description": "Powers the functionality for this trigger.",
-          "anyOf": [
-            {
-              "$ref": "/BasicPollingOperationSchema"
-            },
-            {
-              "$ref": "/BasicHookOperationSchema"
-            }
-          ]
+        "search": {
+          "description":
+            "The key of the search that powers this search-or-create",
+          "$ref": "/KeySchema"
+        },
+        "create": {
+          "description":
+            "The key of the create that powers this search-or-create",
+          "$ref": "/KeySchema"
         }
       },
       "additionalProperties": false
@@ -1043,124 +1160,37 @@
       },
       "additionalProperties": false
     },
-    "BasicCreateActionOperationSchema": {
-      "id": "/BasicCreateActionOperationSchema",
-      "description": "Represents the fundamental mechanics of a create.",
-      "type": "object",
-      "required": ["perform"],
-      "properties": {
-        "resource": {
-          "description":
-            "Optionally reference and extends a resource. Allows Zapier to automatically tie together samples, lists and hooks, greatly improving the UX. EG: if you had another trigger reusing a resource but filtering the results.",
-          "$ref": "/RefResourceSchema"
-        },
-        "perform": {
-          "description":
-            "How will Zapier get the data? This can be a function like `(z) => [{id: 123}]` or a request like `{url: 'http...'}`.",
-          "oneOf": [
-            {
-              "$ref": "/RequestSchema"
-            },
-            {
-              "$ref": "/FunctionSchema"
-            }
-          ]
-        },
-        "performGet": {
-          "description":
-            "How will Zapier get a single record? If you find yourself reaching for this - consider resources and their built-in get methods.",
-          "oneOf": [
-            {
-              "$ref": "/RequestSchema"
-            },
-            {
-              "$ref": "/FunctionSchema"
-            }
-          ]
-        },
-        "inputFields": {
-          "description":
-            "What should the form a user sees and configures look like?",
-          "$ref": "/DynamicFieldsSchema"
-        },
-        "outputFields": {
-          "description":
-            "What fields of data will this return? Will use resource outputFields if missing, will also use sample if available.",
-          "$ref": "/DynamicFieldsSchema"
-        },
-        "sample": {
-          "description":
-            "What does a sample of data look like? Will use resource sample if missing. Requirement waived if `display.hidden` is true or if this belongs to a resource that has a top-level sample",
-          "type": "object",
-          "minProperties": 1,
-          "docAnnotation": {
-            "required": {
-              "type": "replace",
-              "value": "**yes** (with exceptions, see description)"
-            }
-          }
-        },
-        "shouldLock": {
-          "description":
-            "Should this action be performed one at a time (avoid concurrency)?",
-          "type": "boolean"
-        }
-      },
-      "additionalProperties": false
-    },
-    "CreateSchema": {
-      "id": "/CreateSchema",
-      "description": "How will Zapier create a new object?",
+    "TriggerSchema": {
+      "id": "/TriggerSchema",
+      "description": "How will Zapier get notified of new objects?",
       "type": "object",
       "required": ["key", "noun", "display", "operation"],
       "properties": {
         "key": {
-          "description": "A key to uniquely identify this create.",
+          "description": "A key to uniquely identify this trigger.",
           "$ref": "/KeySchema"
         },
         "noun": {
           "description":
-            "A noun for this create that completes the sentence \"creates a new XXX\".",
+            "A noun for this trigger that completes the sentence \"triggers on a new XXX\".",
           "type": "string",
           "minLength": 2,
           "maxLength": 255
         },
         "display": {
-          "description": "Configures the UI for this create.",
+          "description": "Configures the UI for this trigger.",
           "$ref": "/BasicDisplaySchema"
         },
         "operation": {
-          "description": "Powers the functionality for this create.",
-          "$ref": "/BasicCreateActionOperationSchema"
-        }
-      },
-      "additionalProperties": false
-    },
-    "SearchOrCreateSchema": {
-      "id": "/SearchOrCreateSchema",
-      "description":
-        "Pair an existing search and a create to enable \"Find or Create\" functionality in your app",
-      "type": "object",
-      "required": ["key", "display", "search", "create"],
-      "properties": {
-        "key": {
-          "description":
-            "A key to uniquely identify this search-or-create. Must match the search key.",
-          "$ref": "/KeySchema"
-        },
-        "display": {
-          "description": "Configures the UI for this search-or-create.",
-          "$ref": "/BasicDisplaySchema"
-        },
-        "search": {
-          "description":
-            "The key of the search that powers this search-or-create",
-          "$ref": "/KeySchema"
-        },
-        "create": {
-          "description":
-            "The key of the create that powers this search-or-create",
-          "$ref": "/KeySchema"
+          "description": "Powers the functionality for this trigger.",
+          "anyOf": [
+            {
+              "$ref": "/BasicPollingOperationSchema"
+            },
+            {
+              "$ref": "/BasicHookOperationSchema"
+            }
+          ]
         }
       },
       "additionalProperties": false
@@ -1226,46 +1256,10 @@
       },
       "additionalProperties": false
     },
-    "ResourcesSchema": {
-      "id": "/ResourcesSchema",
-      "description":
-        "All the resources that underlie common CRUD methods powering automatically handled triggers, creates, and searches for your app. Zapier will break these apart for you.",
-      "type": "object",
-      "patternProperties": {
-        "^[a-zA-Z]+[a-zA-Z0-9_]*$": {
-          "description":
-            "Any unique key can be used and its values will be validated against the ResourceSchema.",
-          "$ref": "/ResourceSchema"
-        }
-      },
-      "additionalProperties": false
-    },
-    "TriggersSchema": {
-      "id": "/TriggersSchema",
-      "description":
-        "Enumerates the triggers your app has available for users.",
-      "type": "object",
-      "patternProperties": {
-        "^[a-zA-Z]+[a-zA-Z0-9_]*$": {
-          "description":
-            "Any unique key can be used and its values will be validated against the TriggerSchema.",
-          "$ref": "/TriggerSchema"
-        }
-      },
-      "additionalProperties": false
-    },
-    "SearchesSchema": {
-      "id": "/SearchesSchema",
-      "description":
-        "Enumerates the searches your app has available for users.",
-      "type": "object",
-      "patternProperties": {
-        "^[a-zA-Z]+[a-zA-Z0-9_]*$": {
-          "description":
-            "Any unique key can be used and its values will be validated against the SearchSchema.",
-          "$ref": "/SearchSchema"
-        }
-      }
+    "CodeSchema": {
+      "id": "/CodeSchema",
+      "description": "Free-form source code without validation.",
+      "type": "string"
     },
     "CreatesSchema": {
       "id": "/CreatesSchema",
@@ -1279,25 +1273,19 @@
         }
       }
     },
-    "SearchOrCreatesSchema": {
-      "id": "/SearchOrCreatesSchema",
+    "HydratorsSchema": {
+      "id": "/HydratorsSchema",
       "description":
-        "Enumerates the search-or-creates your app has available for users.",
+        "A bank of named functions that you can use in `z.hydrate('someName')` to lazily load data.",
       "type": "object",
       "patternProperties": {
-        "^[a-zA-Z]+[a-zA-Z0-9_]*$": {
+        "^[a-zA-Z]+[a-zA-Z0-9]*$": {
           "description":
-            "Any unique key can be used and its values will be validated against the SearchOrCreateSchema.",
-          "$ref": "/SearchOrCreateSchema"
+            "Any unique key can be used in `z.hydrate('uniqueKeyHere')`.",
+          "$ref": "/FunctionSchema"
         }
-      }
-    },
-    "VersionSchema": {
-      "id": "/VersionSchema",
-      "description":
-        "Represents a simplified semver string, from `0.0.0` to `999.999.999`.",
-      "type": "string",
-      "pattern": "^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$"
+      },
+      "additionalProperties": false
     },
     "MiddlewaresSchema": {
       "id": "/MiddlewaresSchema",
@@ -1316,19 +1304,66 @@
       ],
       "additionalProperties": false
     },
-    "HydratorsSchema": {
-      "id": "/HydratorsSchema",
+    "ResourcesSchema": {
+      "id": "/ResourcesSchema",
       "description":
-        "A bank of named functions that you can use in `z.hydrate('someName')` to lazily load data.",
+        "All the resources that underlie common CRUD methods powering automatically handled triggers, creates, and searches for your app. Zapier will break these apart for you.",
       "type": "object",
       "patternProperties": {
-        "^[a-zA-Z]+[a-zA-Z0-9]*$": {
+        "^[a-zA-Z]+[a-zA-Z0-9_]*$": {
           "description":
-            "Any unique key can be used in `z.hydrate('uniqueKeyHere')`.",
-          "$ref": "/FunctionSchema"
+            "Any unique key can be used and its values will be validated against the ResourceSchema.",
+          "$ref": "/ResourceSchema"
         }
       },
       "additionalProperties": false
+    },
+    "SearchOrCreatesSchema": {
+      "id": "/SearchOrCreatesSchema",
+      "description":
+        "Enumerates the search-or-creates your app has available for users.",
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z]+[a-zA-Z0-9_]*$": {
+          "description":
+            "Any unique key can be used and its values will be validated against the SearchOrCreateSchema.",
+          "$ref": "/SearchOrCreateSchema"
+        }
+      }
+    },
+    "SearchesSchema": {
+      "id": "/SearchesSchema",
+      "description":
+        "Enumerates the searches your app has available for users.",
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z]+[a-zA-Z0-9_]*$": {
+          "description":
+            "Any unique key can be used and its values will be validated against the SearchSchema.",
+          "$ref": "/SearchSchema"
+        }
+      }
+    },
+    "TriggersSchema": {
+      "id": "/TriggersSchema",
+      "description":
+        "Enumerates the triggers your app has available for users.",
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z]+[a-zA-Z0-9_]*$": {
+          "description":
+            "Any unique key can be used and its values will be validated against the TriggerSchema.",
+          "$ref": "/TriggerSchema"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VersionSchema": {
+      "id": "/VersionSchema",
+      "description":
+        "Represents a simplified semver string, from `0.0.0` to `999.999.999`.",
+      "type": "string",
+      "pattern": "^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$"
     }
   }
 }
