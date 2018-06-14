@@ -9,7 +9,8 @@
   "main": "schema.js",
   "files": [
       "/exported-schema.json",
-      "/lib/**/*.js"
+      "/lib/**/*.js",
+      "/schema.js"
   ],
   "scripts": {
     "preversion": "git pull && npm test",
