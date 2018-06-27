@@ -9,7 +9,7 @@ const appDefinition = require('../examples/definition.json');
 
 const copy = o => JSON.parse(JSON.stringify(o));
 
-const NUM_SCHEMAS = 45; // changes regularly as we expand
+const NUM_SCHEMAS = 47; // changes regularly as we expand
 
 describe('app', () => {
   describe('validation', () => {
@@ -33,7 +33,7 @@ describe('app', () => {
       appCopy.triggers['3contact_by_tag'] = appCopy.triggers.contact_by_tag;
       delete appCopy.triggers.contact_by_tag;
       const results = schema.validateAppDefinition(appCopy);
-      results.errors.length.should.eql(1);
+      results.errors.length.should.eql(2); // invalid name and top-level key doesn't match trigger key
     });
 
     it('should run and pass functional constraints', function() {

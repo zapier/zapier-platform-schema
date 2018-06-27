@@ -1,5 +1,5 @@
 {
-  "version": "5.0.0",
+  "version": "7.0.0",
   "schemas": {
     "AppSchema": {
       "id": "/AppSchema",
@@ -134,7 +134,7 @@
     "FieldSchema": {
       "id": "/FieldSchema",
       "description":
-        "Defines a field an app either needs as input, or gives as output.",
+        "Defines a field an app either needs as input, or gives as output. In addition to the requirements below, the following keys are mutually exclusive:\n\n* `children` & `list`\n* `children` & `dict`\n* `children` & `type`\n* `children` & `placeholder`\n* `children` & `helpText`\n* `children` & `default`\n* `dict` & `list`\n* `dynamic` & `dict`\n* `dynamic` & `choices`",
       "type": "object",
       "required": ["key"],
       "properties": {
@@ -211,7 +211,8 @@
             "$ref": "/FieldSchema"
           },
           "description":
-            "An array of child fields that define the structure of a sub-object for this field. Usually used for line items."
+            "An array of child fields that define the structure of a sub-object for this field. Usually used for line items.",
+          "minItems": 1
         },
         "dict": {
           "description": "Is this field a key/value input?",
@@ -235,6 +236,33 @@
         }
       },
       "additionalProperties": false
+    },
+    "FunctionRequireSchema": {
+      "id": "/FunctionRequireSchema",
+      "description":
+        "A path to a file that might have content like `module.exports = (z, bundle) => [{id: 123}];`.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["require"],
+      "properties": {
+        "require": {
+          "type": "string"
+        }
+      }
+    },
+    "FunctionSourceSchema": {
+      "id": "/FunctionSourceSchema",
+      "description":
+        "Source code like {source: \"return 1 + 2\"} which the system will wrap in a function for you.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source"],
+      "properties": {
+        "source": {
+          "type": "string",
+          "pattern": "return"
+        }
+      }
     },
     "FlatObjectSchema": {
       "id": "/FlatObjectSchema",
@@ -268,9 +296,19 @@
     "FunctionSchema": {
       "id": "/FunctionSchema",
       "description":
-        "Internal pointer to a function from the original source. Encodes arity and if `arguments` is used in the body. Note - just write normal functions and the system will encode the pointers for you.",
-      "type": "string",
-      "pattern": "^\\$func\\$\\d+\\$[tf]\\$$"
+        "Internal pointer to a function from the original source or the source code itself. Encodes arity and if `arguments` is used in the body. Note - just write normal functions and the system will encode the pointers for you. Or, provide {source: \"return 1 + 2\"} and the system will wrap in a function for you.",
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^\\$func\\$\\d+\\$[tf]\\$$"
+        },
+        {
+          "$ref": "/FunctionRequireSchema"
+        },
+        {
+          "$ref": "/FunctionSourceSchema"
+        }
+      ]
     },
     "RedirectRequestSchema": {
       "id": "/RedirectRequestSchema",
@@ -568,9 +606,15 @@
         },
         "sample": {
           "description":
-            "What does a sample of data look like? Will use resource sample if missing. Required, if the display is not hidden.",
+            "What does a sample of data look like? Will use resource sample if missing. Requirement waived if `display.hidden` is true or if this belongs to a resource that has a top-level sample",
           "type": "object",
-          "minProperties": 1
+          "minProperties": 1,
+          "docAnnotation": {
+            "required": {
+              "type": "replace",
+              "value": "**yes** (with exceptions, see description)"
+            }
+          }
         }
       },
       "additionalProperties": false
@@ -584,10 +628,15 @@
       "properties": {
         "type": {
           "description":
-            "Clarify how this operation works (polling == pull or hook == push).",
+            "Must be explicitly set to `\"hook\"` unless this hook is defined as part of a resource, in which case it's optional.",
           "type": "string",
-          "default": "hook",
-          "enum": ["hook"]
+          "enum": ["hook"],
+          "docAnnotation": {
+            "required": {
+              "type": "replace",
+              "value": "**yes** (with exceptions, see description)"
+            }
+          }
         },
         "resource": {
           "description":
@@ -647,9 +696,15 @@
         },
         "sample": {
           "description":
-            "What does a sample of data look like? Will use resource sample if missing. Required, if the display is not hidden.",
+            "What does a sample of data look like? Will use resource sample if missing. Requirement waived if `display.hidden` is true or if this belongs to a resource that has a top-level sample",
           "type": "object",
-          "minProperties": 1
+          "minProperties": 1,
+          "docAnnotation": {
+            "required": {
+              "type": "replace",
+              "value": "**yes** (with exceptions, see description)"
+            }
+          }
         }
       },
       "additionalProperties": false
@@ -700,9 +755,15 @@
         },
         "sample": {
           "description":
-            "What does a sample of data look like? Will use resource sample if missing. Required, if the display is not hidden.",
+            "What does a sample of data look like? Will use resource sample if missing. Requirement waived if `display.hidden` is true or if this belongs to a resource that has a top-level sample",
           "type": "object",
-          "minProperties": 1
+          "minProperties": 1,
+          "docAnnotation": {
+            "required": {
+              "type": "replace",
+              "value": "**yes** (with exceptions, see description)"
+            }
+          }
         }
       },
       "additionalProperties": false
@@ -754,9 +815,15 @@
         },
         "sample": {
           "description":
-            "What does a sample of data look like? Will use resource sample if missing. Required, if the display is not hidden.",
+            "What does a sample of data look like? Will use resource sample if missing. Requirement waived if `display.hidden` is true or if this belongs to a resource that has a top-level sample",
           "type": "object",
-          "minProperties": 1
+          "minProperties": 1,
+          "docAnnotation": {
+            "required": {
+              "type": "replace",
+              "value": "**yes** (with exceptions, see description)"
+            }
+          }
         }
       },
       "additionalProperties": false
@@ -1028,9 +1095,15 @@
         },
         "sample": {
           "description":
-            "What does a sample of data look like? Will use resource sample if missing. Required, if the display is not hidden.",
+            "What does a sample of data look like? Will use resource sample if missing. Requirement waived if `display.hidden` is true or if this belongs to a resource that has a top-level sample",
           "type": "object",
-          "minProperties": 1
+          "minProperties": 1,
+          "docAnnotation": {
+            "required": {
+              "type": "replace",
+              "value": "**yes** (with exceptions, see description)"
+            }
+          }
         },
         "shouldLock": {
           "description":
@@ -1076,7 +1149,8 @@
       "required": ["key", "display", "search", "create"],
       "properties": {
         "key": {
-          "description": "A key to uniquely identify this search-or-create.",
+          "description":
+            "A key to uniquely identify this search-or-create. Must match the search key.",
           "$ref": "/KeySchema"
         },
         "display": {

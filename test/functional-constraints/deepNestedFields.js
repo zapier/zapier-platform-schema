@@ -60,6 +60,7 @@ describe('deepNestedFields', () => {
               {
                 key: 'line_items',
                 children: [
+                  { key: 'some do not have children' },
                   {
                     key: 'product',
                     children: [{ key: 'name', type: 'string' }]
@@ -76,40 +77,6 @@ describe('deepNestedFields', () => {
     results.errors.should.have.length(1);
     results.errors[0].stack.should.eql(
       'instance.creates.foo.inputFields[1] must not contain deeply nested child fields. One level max.'
-    );
-  });
-
-  it('should error on fields with empty children', () => {
-    const definition = {
-      version: '1.0.0',
-      platformVersion: '1.0.0',
-      creates: {
-        foo: {
-          key: 'foo',
-          noun: 'Foo',
-          display: {
-            label: 'Create Foo',
-            description: 'Creates a...'
-          },
-          operation: {
-            perform: '$func$2$f$',
-            sample: { id: 1 },
-            inputFields: [
-              { key: 'orderId', type: 'number' },
-              {
-                key: 'line_items',
-                children: []
-              }
-            ]
-          }
-        }
-      }
-    };
-
-    const results = schema.validateAppDefinition(definition);
-    results.errors.should.have.length(1);
-    results.errors[0].stack.should.eql(
-      'instance.creates.foo.inputFields[1].children must not be empty.'
     );
   });
 });
