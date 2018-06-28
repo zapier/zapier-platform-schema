@@ -65,10 +65,10 @@
             "All the search-or-create combos for your app. You can create your own here, or Zapier will automatically register any from resources that define a search, a create, and a get (or define a searchOrCreate directly). Register non-resource search-or-creates here as well.",
           "$ref": "/SearchOrCreatesSchema"
         },
-        "migration": {
+        "migrations": {
           "description":
-            "Migration hooks that will run when changing zaps between different versions of your app",
-          "$ref": "/MigrationSchema"
+            "All the migrations for your app. Each migration has hooks that will run when changing zaps between different versions of your app",
+          "$ref": "/MigrationsSchema"
         }
       },
       "additionalProperties": false
@@ -1170,6 +1170,50 @@
       },
       "additionalProperties": false
     },
+    "MigrationSchema": {
+      "id": "/MigrationSchema",
+      "description": "Represents migration schemes.",
+      "type": "object",
+      "required": ["mapping"],
+      "properties": {
+        "mapping": {
+          "description":
+            "An object describing each of an application's actions and the changes that need to be applied to successfully migrated steps to this version of your app",
+          "creates": {
+            "description":
+              "All of your application's creates and any changes that need to be applied to migrating steps",
+            "type": "object"
+          },
+          "triggers": {
+            "description":
+              "All of your application's triggers and any changes that need to be applied to migrating steps",
+            "type": "object"
+          },
+          "searches": {
+            "description":
+              "All of your application's searches and any changes that need to be applied to migrating steps",
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "pre": {
+          "description":
+            "Function to be run before applying your mapping to a migrating step",
+          "$ref": "/FunctionSchema"
+        },
+        "post": {
+          "description":
+            "Function to be run after applying your mapping to a migrating step",
+          "$ref": "/FunctionSchema"
+        },
+        "authentication": {
+          "description":
+            "Function to be run when transitioning between authentications - will only run once per account",
+          "$ref": "/FunctionSchema"
+        }
+      },
+      "additionalProperties": false
+    },
     "AuthenticationSchema": {
       "id": "/AuthenticationSchema",
       "description": "Represents authentication schemes.",
@@ -1335,47 +1379,12 @@
       },
       "additionalProperties": false
     },
-    "MigrationSchema": {
-      "id": "/MigrationSchema",
-      "description": "Represents migration schemes.",
-      "type": "object",
-      "required": ["mapping"],
-      "properties": {
-        "mapping": {
-          "description":
-            "An object describing each of an application's actions and the changes that need to be applied to successfully migrated steps to this version of your app",
-          "creates": {
-            "description":
-              "All of your application's creates and any changes that need to be applied to migrating steps",
-            "type": "object"
-          },
-          "triggers": {
-            "description":
-              "All of your application's triggers and any changes that need to be applied to migrating steps",
-            "type": "object"
-          },
-          "searches": {
-            "description":
-              "All of your application's searches and any changes that need to be applied to migrating steps",
-            "type": "object"
-          },
-          "type": "object"
-        },
-        "pre": {
-          "description":
-            "Function to be run before applying your mapping to a migrating step",
-          "$ref": "/FunctionSchema"
-        },
-        "post": {
-          "description":
-            "Function to be run after applying your mapping to a migrating step",
-          "$ref": "/FunctionSchema"
-        },
-        "authentication": {
-          "description":
-            "Function to be run when transitioning between authentications - will only run once per account",
-          "$ref": "/FunctionSchema"
-        }
+    "MigrationsSchema": {
+      "id": "/MigrationsSchema",
+      "description": "Enumerates the migrations your app has available.",
+      "type": "array",
+      "items": {
+        "$ref": "/MigrationSchema"
       },
       "additionalProperties": false
     }
