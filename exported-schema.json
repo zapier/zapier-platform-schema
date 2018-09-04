@@ -1,5 +1,5 @@
 {
-  "version": "7.2.0",
+  "version": "7.3.0",
   "schemas": {
     "AppSchema": {
       "id": "/AppSchema",
@@ -787,6 +787,11 @@
             }
           ]
         },
+        "resume": {
+          "description":
+            "A function that parses data from a perform + callback to resume this action. For use with callback semantics",
+          "$ref": "/FunctionSchema"
+        },
         "performGet": {
           "description":
             "How will Zapier get a single record? If you find yourself reaching for this - consider resources and their built-in get methods.",
@@ -1066,6 +1071,11 @@
               "$ref": "/FunctionSchema"
             }
           ]
+        },
+        "resume": {
+          "description":
+            "A function that parses data from a perform + callback to resume this action. For use with callback semantics",
+          "$ref": "/FunctionSchema"
         },
         "performGet": {
           "description":
