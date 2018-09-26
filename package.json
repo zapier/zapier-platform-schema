@@ -20,7 +20,7 @@
     "posttest": "eslint lib",
     "smoke-test": "mocha -t 5000 --recursive smoke-test",
     "coverage": "istanbul cover _mocha -- --recursive",
-    "export": "node bin/export.js",
+    "export": "node bin/export.js && prettier --write exported-schema.json",
     "docs": "node bin/docs.js",
     "build": "npm run docs && npm run export",
     "add": "git add exported-schema.json README.md docs",
