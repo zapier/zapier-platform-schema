@@ -7,8 +7,6 @@ const path = require('path');
 require('should');
 const fetch = require('node-fetch');
 
-const REGEX_VERSION = /\d+\.\d+\.\d+/;
-
 const npmPack = () => {
   let filename;
   const proc = spawnSync('npm', ['pack'], { encoding: 'utf8' });
@@ -63,7 +61,6 @@ describe('smoke tests - setup will take some time', () => {
 
   before(() => {
     context.package.filename = npmPack();
-    context.package.version = context.package.filename.match(REGEX_VERSION)[0];
     context.package.path = path.join(process.cwd(), context.package.filename);
 
     context.workdir = setupTempWorkingDir();
