@@ -49,7 +49,6 @@ describe('smoke tests - setup will take some time', () => {
     // Global context that will be available for all test cases in this test suite
     package: {
       filename: null,
-      version: null,
       path: null
     },
     workdir: null,
