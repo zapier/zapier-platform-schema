@@ -787,7 +787,7 @@
             }
           ]
         },
-        "resume": {
+        "performResume": {
           "description":
             "A function that parses data from a perform + callback to resume this action. For use with callback semantics",
           "$ref": "/FunctionSchema"
@@ -1072,7 +1072,7 @@
             }
           ]
         },
-        "resume": {
+        "performResume": {
           "description":
             "A function that parses data from a perform + callback to resume this action. For use with callback semantics",
           "$ref": "/FunctionSchema"
