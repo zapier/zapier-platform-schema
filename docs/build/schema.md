@@ -78,6 +78,8 @@ Key | Required | Type | Description
 --- | -------- | ---- | -----------
 `version` | **yes** | [/VersionSchema](#versionschema) | A version identifier for your code.
 `platformVersion` | **yes** | [/VersionSchema](#versionschema) | A version identifier for the Zapier execution environment.
+`beforeApp` | no | [/MiddlewaresSchema](#middlewaresschema) | EXPERIMENTAL: Before the perform method is called on your app, you can modify the execution context.
+`afterApp` | no | [/MiddlewaresSchema](#middlewaresschema) | EXPERIMENTAL: After the perform method is called on your app, you can modify the response.
 `authentication` | no | [/AuthenticationSchema](#authenticationschema) | Choose what scheme your API uses for authentication.
 `requestTemplate` | no | [/RequestSchema](#requestschema) | Define a request mixin, great for setting custom headers, content-types, etc.
 `beforeRequest` | no | [/MiddlewaresSchema](#middlewaresschema) | Before an HTTP request is sent via our `z.request()` client, you can modify it.
@@ -789,7 +791,7 @@ A unique identifier for this item.
 
 ## /MiddlewaresSchema
 
-List of HTTP before or after middlewares. Can be an array of functions or a single function
+List of before or after middlewares. Can be an array of functions or a single function
 
 #### Details
 
@@ -865,6 +867,7 @@ Key | Required | Type | Description
 `params` | no | [/FlatObjectSchema](#flatobjectschema) | A mapping of the querystring - will get merged with any query params in the URL. Keys and values will be encoded.
 `headers` | no | [/FlatObjectSchema](#flatobjectschema) | The HTTP headers for the request.
 `auth` | no | `array`[`string`] | The username and password for Basic Auth. Like `['AzureDiamond', 'hunter2']`.
+`omitEmptyParams` | no | `boolean` | Should empty params not be sent? (empty strings, `null`, and `undefined` only — `[]`, `{}`, and `false` will still be sent)
 
 -----
 
