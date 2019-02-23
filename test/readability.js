@@ -4,6 +4,7 @@ require('should');
 
 const AuthenticationSchema = require('../lib/schemas/AuthenticationSchema');
 const CreateSchema = require('../lib/schemas/CreateSchema');
+const FlatObjectSchema = require('../lib/schemas/FlatObjectSchema');
 
 describe('readability', () => {
   it('should have decent messages for anyOf mismatches', () => {
@@ -12,9 +13,7 @@ describe('readability', () => {
       test: 'whateverfake!'
     });
     results.errors.should.have.length(1);
-    results.errors[0].stack.should.eql(
-      'instance.test is not exactly one from </RequestSchema>,</FunctionSchema>'
-    );
+    results.errors[0].stack.should.eql('instance is not of a type(s) object');
   });
 
   it('should have decent messages for minimum length not met', () => {
@@ -37,7 +36,7 @@ describe('readability', () => {
   });
 
   it('should have decent messages for value type mismatch', () => {
-    let results = CreateSchema.validate({
+    const results = CreateSchema.validate({
       key: 'recipe',
       noun: 'Recipe',
       display: {
@@ -47,15 +46,15 @@ describe('readability', () => {
       operation: {
         perform: '$func$2$f$',
         sample: { id: 1 },
-        inputFields: [false]
+        inputFields: [1]
       }
     });
     results.errors.should.have.length(1);
-    results.errors[0].stack.should.eql(
-      'instance.operation.inputFields[0] is not exactly one from </FieldSchema>,</FunctionSchema>'
-    );
+    results.errors[0].stack.should.eql('instance is not of a type(s) object');
+  });
 
-    results = CreateSchema.validate({
+  it('should surface deep issues', () => {
+    const results = CreateSchema.validate({
       key: 'recipe',
       noun: 'Recipe',
       display: {
@@ -69,10 +68,19 @@ describe('readability', () => {
       }
     });
     results.errors.should.have.length(1);
-    // Ideally it would be the commented version, but it would require significant changes in jsonschema
-    // results.errors[0].stack.should.eql('instance.operation.inputFields[0].default does not meet minimum length of 1');
-    results.errors[0].stack.should.eql(
-      'instance.operation.inputFields[0] is not exactly one from </FieldSchema>,</FunctionSchema>'
+    results.errors[0].property.should.eql(
+      'instance.operation.inputFields[0].default'
     );
+    results.errors[0].message.should.eql('does not meet minimum length of 1');
+  });
+
+  it('should work on weird schemas', () => {
+    const results = FlatObjectSchema.validate({
+      a: {},
+      b: []
+    });
+    results.errors.should.have.length(2);
+    results.errors[0].property.should.eql('instance.a');
+    results.errors[0].message.should.startWith('is not any of [subschema');
   });
 });
