@@ -423,7 +423,20 @@
         "removeMissingValuesFrom": {
           "description":
             "Should missing values be sent? (empty strings, `null`, and `undefined` only — `[]`, `{}`, and `false` will still be sent)",
-          "$ref": "/RequestTokenOptionsSchema"
+          "properties": {
+            "params": {
+              "description":
+                "Refers to data sent via a requests query params (`req.params`)",
+              "type": "boolean",
+              "default": false
+            },
+            "body": {
+              "description":
+                "Refers to tokens sent via a requsts body (`req.body`)",
+              "type": "boolean",
+              "default": false
+            }
+          }
         }
       },
       "additionalProperties": false
