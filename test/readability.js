@@ -1,10 +1,10 @@
 'use strict';
 
-require('should');
+const should = require('should');
 
 const AuthenticationSchema = require('../lib/schemas/AuthenticationSchema');
 const CreateSchema = require('../lib/schemas/CreateSchema');
-const FlatObjectSchema = require('../lib/schemas/FlatObjectSchema');
+const TriggerSchema = require('../lib/schemas/TriggerSchema');
 
 describe('readability', () => {
   it('should have decent messages for anyOf mismatches', () => {
@@ -17,7 +17,7 @@ describe('readability', () => {
   });
 
   it('should have decent messages for minimum length not met', () => {
-    const results = CreateSchema.validate({
+    const results = TriggerSchema.validate({
       key: 'recipe',
       noun: 'Recipe',
       display: {
@@ -74,13 +74,56 @@ describe('readability', () => {
     results.errors[0].message.should.eql('does not meet minimum length of 1');
   });
 
-  it('should work on weird schemas', () => {
-    const results = FlatObjectSchema.validate({
-      a: {},
-      b: []
+  it('should correctly surface subschema types', () => {
+    const results = CreateSchema.validate({
+      key: 'recipe',
+      noun: 'Recipe',
+      display: {
+        label: 'Create Recipe',
+        description: 'Creates a new recipe.'
+      },
+      operation: {
+        perform: {
+          url: 'https://example.com',
+          body: 123
+        },
+        sample: { id: 1 }
+      }
     });
-    results.errors.should.have.length(2);
-    results.errors[0].property.should.eql('instance.a');
-    results.errors[0].message.should.startWith('is not any of [subschema');
+    results.errors.should.have.length(1);
+    results.errors[0].property.should.eql('instance.operation.perform.body');
+    should(
+      results.errors[0].message.includes('null,string,object,array')
+    ).be.true();
+    results.errors[0].docLinks.length.should.eql(0);
+  });
+
+  it('should be helpful for fieldChoices', () => {
+    const results = CreateSchema.validate({
+      key: 'recipe',
+      noun: 'Recipe',
+      display: {
+        label: 'Create Recipe',
+        description: 'Creates a new recipe.'
+      },
+      operation: {
+        perform: '$func$2$f$',
+        sample: { id: 1 },
+        inputFields: [
+          {
+            key: 'adsf',
+            // schema says these should be strings
+            choices: [1, 2, 3]
+          }
+        ]
+      }
+    });
+    results.errors.should.have.length(1);
+    results.errors[0].property.should.eql(
+      'instance.operation.inputFields[0].choices'
+    );
+    should(
+      results.errors[0].docLinks[0].endsWith('schema.md#fieldchoicesschema')
+    ).be.true();
   });
 });
