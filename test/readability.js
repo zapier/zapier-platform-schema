@@ -14,6 +14,7 @@ describe('readability', () => {
     });
     results.errors.should.have.length(1);
     results.errors[0].stack.should.eql('instance is not of a type(s) object');
+    should(results.errors[0].property.endsWith('instance')).be.false();
   });
 
   it('should have decent messages for minimum length not met', () => {
@@ -30,6 +31,7 @@ describe('readability', () => {
       }
     });
     results.errors.should.have.length(1);
+    should(results.errors[0].property.endsWith('instance')).be.false();
     results.errors[0].stack.should.eql(
       'instance.display.label does not meet minimum length of 2'
     );
@@ -46,10 +48,30 @@ describe('readability', () => {
       operation: {
         perform: '$func$2$f$',
         sample: { id: 1 },
-        inputFields: [1]
+        inputFields: [123]
       }
     });
     results.errors.should.have.length(1);
+    should(results.errors[0].property.endsWith('instance')).be.false();
+    results.errors[0].stack.should.eql('instance is not of a type(s) object');
+  });
+
+  it('should handle falsy values for objects', () => {
+    const results = CreateSchema.validate({
+      key: 'recipe',
+      noun: 'Recipe',
+      display: {
+        label: 'Create Recipe',
+        description: 'Creates a new recipe.'
+      },
+      operation: {
+        perform: '$func$2$f$',
+        sample: { id: 1 },
+        inputFields: [0]
+      }
+    });
+    results.errors.should.have.length(1);
+    should(results.errors[0].property.endsWith('instance')).be.false();
     results.errors[0].stack.should.eql('instance is not of a type(s) object');
   });
 
@@ -68,6 +90,7 @@ describe('readability', () => {
       }
     });
     results.errors.should.have.length(1);
+    should(results.errors[0].property.endsWith('instance')).be.false();
     results.errors[0].property.should.eql(
       'instance.operation.inputFields[0].default'
     );
@@ -95,6 +118,7 @@ describe('readability', () => {
     should(
       results.errors[0].message.includes('null,string,object,array')
     ).be.true();
+    should(results.errors[0].property.endsWith('instance')).be.false();
     results.errors[0].docLinks.length.should.eql(0);
   });
 
@@ -125,5 +149,6 @@ describe('readability', () => {
     should(
       results.errors[0].docLinks[0].endsWith('schema.md#fieldchoicesschema')
     ).be.true();
+    should(results.errors[0].property.endsWith('instance')).be.false();
   });
 });
