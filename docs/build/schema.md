@@ -121,7 +121,7 @@ Key | Required | Type | Description
 `searches` | no | [/SearchesSchema](#searchesschema) | All the searches for your app. You can add your own here, or Zapier will automatically register any from the search method on your resources.
 `creates` | no | [/CreatesSchema](#createsschema) | All the creates for your app. You can add your own here, or Zapier will automatically register any from the create method on your resources.
 `searchOrCreates` | no | [/SearchOrCreatesSchema](#searchorcreatesschema) | All the search-or-create combos for your app. You can create your own here, or Zapier will automatically register any from resources that define a search, a create, and a get (or define a searchOrCreate directly). Register non-resource search-or-creates here as well.
-`appFlags` | no | [/AppFlagsSchema](#appflagsschema) | Top-level app options
+`flags` | no | [/AppFlagsSchema](#appflagsschema) | Top-level app options
 
 -----
 
