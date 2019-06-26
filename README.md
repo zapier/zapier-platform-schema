@@ -1,3 +1,9 @@
+# MOVED
+
+This code has been moved to: https://github.com/zapier/zapier-platform/tree/master/packages/schema
+
+---
+
 # Schema For Zapier CLI Platform
 
 [Visit the CLI for basic documentation and instructions on how to use](https://zapier.github.io/zapier-platform-cli).
